@@ -1,6 +1,6 @@
 import { Model } from 'sequelize-typescript'
 
-import { UserRoles } from '../../typedefs/User/enums/User.enums'
+import { CompanyRoles, UserRoles } from '../../typedefs/User/enums/User.enums'
 
 
 export declare class UserOrm extends Model {
@@ -13,5 +13,6 @@ export declare class UserOrm extends Model {
   userNumber: string
   password: string
   userRole: UserRoles
+  companyRole: CompanyRoles | null
   fcmToken: string
 }

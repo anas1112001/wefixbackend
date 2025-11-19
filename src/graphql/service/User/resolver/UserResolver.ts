@@ -142,7 +142,7 @@ export class UserResolver {
         return { message: 'device id is not passed', token: null, user: null };
       }
 
-      if (!newUser.deviceId) {
+      if (!newUser.fcmToken) {
         return { message: 'fcm token is not passed', token: null, user: null };
       }
 

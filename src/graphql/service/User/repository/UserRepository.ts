@@ -6,6 +6,7 @@ import { FindOptions } from 'sequelize/types';
 import { UserOrm } from './orm/UserOrm';
 
 import { User } from '../../../../db/models/user.model';
+import { CompanyRoles, UserRoles } from '../typedefs/User/enums/User.enums';
 import { CreateUserInput } from '../typedefs/User/inputs/CreateUserInput.schema';
 import { UpdateUserInput } from '../typedefs/User/inputs/UpdateUserInput.schema';
 
@@ -35,11 +36,12 @@ class UserRepository {
     try {
       const email = userEmail.toLocaleLowerCase();
       const user = await User.findOne({ where: { email } });
-      await user.update({ deviceId, fcmToken }, { where: { id: user.id } });
 
       if (!user || !deviceId || !fcmToken) {
         return null;
       }
+
+      await user.update({ deviceId, fcmToken }, { where: { id: user.id } });
 
       const isPasswordValid = await bcrypt.compare(password, user.password);
       if (!isPasswordValid) {
@@ -114,12 +116,14 @@ class UserRepository {
       const hashedPassword = await bcrypt.hash(userData.password, salt);
 
       if (!deviceId) {
-        return null;
+        throw new ApolloError('device id is not passed', 'DEVICE_ID_REQUIRED');
       }
 
       if (!fcmToken) {
-        return null;
+        throw new ApolloError('fcm token is not passed', 'FCM_TOKEN_REQUIRED');
       }
+
+      const resolvedCompanyRole = this.resolveCompanyRole(userData.userRole, userData.companyRole ?? null);
 
       const userCreationData = {
         deviceId: userData.deviceId,
@@ -130,6 +134,7 @@ class UserRepository {
         password: hashedPassword,
         userNumber: userData.userNumber,
         userRole: userData.userRole,
+        companyRole: resolvedCompanyRole,
       };
 
       const newUser = await User.create(userCreationData);
@@ -148,6 +153,13 @@ class UserRepository {
           updateData.password = await bcrypt.hash(updateData.password, salt);
         }
 
+        if (updateData.userRole || updateData.companyRole) {
+          const nextUserRole = (updateData.userRole ?? user.userRole) as UserRoles;
+          const requestedCompanyRole = (updateData.companyRole ?? user.companyRole) as CompanyRoles | null;
+          updateData.userRole = nextUserRole;
+          updateData.companyRole = this.resolveCompanyRole(nextUserRole, requestedCompanyRole);
+        }
+
         await user.update(updateData);
         return user;
       }
@@ -164,6 +176,22 @@ class UserRepository {
     } catch (error) {
       throw new ApolloError(`Failed to delete user with ID ${id}: ${error.message}`, 'USER_DELETION_FAILED');
     }
+  }
+
+  private resolveCompanyRole(userRole: UserRoles, requestedRole: CompanyRoles | null): CompanyRoles | null {
+    if (userRole === UserRoles.SUPER_ADMIN) {
+      return null;
+    }
+
+    if (userRole === UserRoles.INDIVIDUAL) {
+      return CompanyRoles.CLIENT;
+    }
+
+    if (!requestedRole || requestedRole === CompanyRoles.CLIENT) {
+      throw new ApolloError('Company users must have a valid company role (Admin, Team Leader, or Technician)', 'INVALID_COMPANY_ROLE');
+    }
+
+    return requestedRole;
   }
 
 }

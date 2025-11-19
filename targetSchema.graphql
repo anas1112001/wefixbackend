@@ -20,7 +20,16 @@ type AuthTokens {
   tokenType: String!
 }
 
+"""Company specific role scoping"""
+enum CompanyRoles {
+  CLIENT
+  COMPANY_ADMIN
+  TEAM_LEADER
+  TECHNICIAN
+}
+
 input CreateUserInput {
+  companyRole: CompanyRoles
   deviceId: String!
   email: String!
   fcmToken: String!
@@ -28,7 +37,7 @@ input CreateUserInput {
   lastName: String!
   password: String!
   userNumber: String!
-  userRole: Positions!
+  userRole: UserRoles!
 }
 
 """Response data for updating a user"""
@@ -85,12 +94,6 @@ type Mutation {
   updateUser(id: String!, updateUserData: UpdateUserInput!): UpdateUserResponse!
 }
 
-"""Employee position"""
-enum Positions {
-  DOCTOR
-  STUDENT
-}
-
 type Query {
   """Query for a list of Log"""
   getAllLogs: [LogResponse!]
@@ -119,9 +122,11 @@ type QueryUsersResponse {
 
 """Input data for updating a user"""
 input UpdateUserInput {
-  firstName: String!
-  lastName: String!
-  userNumber: String!
+  companyRole: CompanyRoles
+  firstName: String
+  lastName: String
+  userNumber: String
+  userRole: UserRoles
 }
 
 """Response data for updating a user"""
@@ -132,6 +137,7 @@ type UpdateUserResponse {
 
 """Resoponse for the user item"""
 type User {
+  companyRole: CompanyRoles
   createdAt: DateTime!
   email: String!
   firstName: String!
@@ -141,5 +147,12 @@ type User {
   password: String!
   updatedAt: DateTime!
   userNumber: String!
-  userRole: Positions!
+  userRole: UserRoles!
+}
+
+"""High level role for access control"""
+enum UserRoles {
+  COMPANY
+  INDIVIDUAL
+  SUPER_ADMIN
 }

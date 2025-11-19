@@ -2,7 +2,7 @@ import { DataTypes, UUIDV4 } from 'sequelize'
 import { Column, CreatedAt, Model, Table, UpdatedAt } from 'sequelize-typescript'
 
 
-import {  UserRoles } from '../../graphql/service/User/typedefs/User/enums/User.enums'
+import { CompanyRoles, UserRoles } from '../../graphql/service/User/typedefs/User/enums/User.enums'
 import { getDate, getIsoTimestamp, getUserFullName, setDate, toLowerCase } from '../../lib'
 
 @Table({
@@ -92,6 +92,13 @@ export class User extends Model {
     type: DataTypes.ENUM({ values: Object.values(UserRoles) }),
   })
   public userRole: UserRoles | null
+
+  @Column({
+    allowNull: true,
+    comment: 'Company specific role',
+    type: DataTypes.ENUM({ values: Object.values(CompanyRoles) }),
+  })
+  public companyRole: CompanyRoles | null
 
 
   @CreatedAt

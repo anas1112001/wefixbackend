@@ -1,6 +1,6 @@
 import { Field, InputType } from 'type-graphql';
 
-import { UserRoles } from '../enums/User.enums';
+import { CompanyRoles, UserRoles } from '../enums/User.enums';
 
 @InputType()
 export class CreateUserInput {
@@ -15,6 +15,9 @@ export class CreateUserInput {
 
   @Field(() => UserRoles)
   userRole: UserRoles;
+
+  @Field(() => CompanyRoles, { nullable: true })
+  companyRole?: CompanyRoles;
 
   @Field()
   email: string;

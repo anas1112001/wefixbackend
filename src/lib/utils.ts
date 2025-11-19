@@ -67,6 +67,9 @@ export const generateToken = function (user: any): string {
 
   const payload = {
     email: user.email,
+    id: user.id,
+    userRole: user.userRole,
+    companyRole: user.companyRole,
   };
 
   const token = jwt.sign(payload, secretKey, { expiresIn });
@@ -80,6 +83,9 @@ export const generateRefreshToken = function (user: any): string {
 
   const payload = {
     email: user.email,
+    id: user.id,
+    userRole: user.userRole,
+    companyRole: user.companyRole,
   };
 
   const refreshToken = jwt.sign(payload, refreshTokenSecretKey, { expiresIn });
