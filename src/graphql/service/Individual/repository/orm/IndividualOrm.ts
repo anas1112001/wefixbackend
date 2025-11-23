@@ -1,5 +1,5 @@
 import { Model } from 'sequelize-typescript';
-import { IndividualStatus } from '../../../../../db/models/individual.model';
+import { IndividualStatus } from '../../typedefs/Individual/enums/Individual.enums';
 
 export declare class IndividualOrm extends Model {
   id: string;

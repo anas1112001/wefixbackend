@@ -1,5 +1,5 @@
 import { Field, InputType } from 'type-graphql';
-import { IndividualStatus } from '../../enums/Individual.enums';
+import { IndividualStatus } from '../enums/Individual.enums';
 
 @InputType({ description: 'Input data for filtering individuals' })
 export class IndividualFilterInput {

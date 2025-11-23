@@ -1,7 +1,9 @@
 import { DataTypes, UUIDV4 } from 'sequelize';
-import { Column, CreatedAt, Model, Table, UpdatedAt } from 'sequelize-typescript';
+import { BelongsTo, Column, CreatedAt, ForeignKey, Model, Table, UpdatedAt } from 'sequelize-typescript';
 import { getDate, getIsoTimestamp, setDate, toLowerCase } from '../../lib';
-import { CompanyStatus, EstablishedType } from '../../graphql/service/Company/typedefs/Company/enums/Company.enums';
+import { CompanyStatus } from '../../graphql/service/Company/typedefs/Company/enums/Company.enums';
+import { Country } from './country.model';
+import { EstablishedType } from './established-type.model';
 
 @Table({
   modelName: 'Company',
@@ -32,17 +34,55 @@ export class Company extends Model {
   public title: string;
 
   @Column({
+    allowNull: true,
+    type: DataTypes.STRING(100),
+  })
+  public companyNameArabic: string | null;
+
+  @Column({
+    allowNull: true,
+    type: DataTypes.STRING(100),
+  })
+  public companyNameEnglish: string | null;
+
+  @ForeignKey(() => Country)
+  @Column({
+    allowNull: true,
+    type: DataTypes.UUID,
+  })
+  public countryId: string | null;
+
+  @BelongsTo(() => Country)
+  public country: Country;
+
+  @ForeignKey(() => EstablishedType)
+  @Column({
+    allowNull: true,
+    type: DataTypes.UUID,
+  })
+  public establishedTypeId: string | null;
+
+  @BelongsTo(() => EstablishedType)
+  public establishedType: EstablishedType;
+
+  @Column({
+    allowNull: true,
+    type: DataTypes.TEXT,
+  })
+  public hoAddress: string | null;
+
+  @Column({
+    allowNull: true,
+    type: DataTypes.STRING(100),
+  })
+  public hoLocation: string | null;
+
+  @Column({
     allowNull: false,
     defaultValue: CompanyStatus.ACTIVE,
     type: DataTypes.ENUM({ values: Object.values(CompanyStatus) }),
   })
   public isActive: CompanyStatus;
-
-  @Column({
-    allowNull: false,
-    type: DataTypes.ENUM({ values: Object.values(EstablishedType) }),
-  })
-  public establishedType: EstablishedType;
 
   @Column({
     allowNull: false,

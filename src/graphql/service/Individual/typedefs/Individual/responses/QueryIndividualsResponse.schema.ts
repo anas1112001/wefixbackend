@@ -1,5 +1,5 @@
 import { Field, ObjectType } from 'type-graphql';
-import { Individual } from '../../schema/Individual.schema';
+import { Individual } from '../schema/Individual.schema';
 
 @ObjectType({ description: 'Response data for individuals list' })
 export class QueryIndividualsResponse {

@@ -20,7 +20,7 @@ export class CompanyResolver {
     try {
       const result = await services.companyRepository.getCompanies(filter || {});
       return {
-        companies: result.companies,
+        companies: result.companies as any,
         limit: result.limit,
         message: 'Companies retrieved successfully',
         page: result.page,
@@ -42,7 +42,7 @@ export class CompanyResolver {
       if (!company) {
         return { company: null, message: 'Company not found' };
       }
-      return { company, message: 'Company retrieved successfully' };
+      return { company: company as any, message: 'Company retrieved successfully' };
     } catch (error) {
       throw new ApolloError(`Error retrieving company: ${error.message}`, 'COMPANY_QUERY_ERROR');
     }
@@ -55,7 +55,7 @@ export class CompanyResolver {
   ): Promise<CreateCompanyResponse> {
     try {
       const company = await services.companyRepository.createCompany(companyData);
-      return { company, message: 'Company created successfully' };
+      return { company: company as any, message: 'Company created successfully' };
     } catch (error) {
       throw new ApolloError(`Error creating company: ${error.message}`, 'COMPANY_CREATION_ERROR');
     }
@@ -72,7 +72,7 @@ export class CompanyResolver {
       if (!company) {
         return { company: null, message: 'Company not found' };
       }
-      return { company, message: 'Company updated successfully' };
+      return { company: company as any, message: 'Company updated successfully' };
     } catch (error) {
       throw new ApolloError(`Error updating company: ${error.message}`, 'COMPANY_UPDATE_ERROR');
     }

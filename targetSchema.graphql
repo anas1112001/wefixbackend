@@ -20,6 +20,80 @@ type AuthTokens {
   tokenType: String!
 }
 
+"""Company entity"""
+type Company {
+  companyId: String!
+  companyNameArabic: String
+  companyNameEnglish: String
+  country: CountryType
+  createdAt: DateTime!
+  establishedType: EstablishedTypeType
+  hoAddress: String
+  hoLocation: String
+  id: ID!
+  isActive: CompanyStatus!
+  logo: String
+  numberOfBranches: Float!
+  title: String!
+  updatedAt: DateTime!
+}
+
+"""Input data for filtering companies"""
+input CompanyFilterInput {
+  limit: Float = 10
+  page: Float = 1
+  search: String
+  status: CompanyStatus
+  type: String
+}
+
+"""Company status types"""
+enum CompanyStatus {
+  ACTIVE
+  INACTIVE
+}
+
+"""Country lookup table"""
+type CountryType {
+  code: String
+  createdAt: DateTime!
+  id: String!
+  isActive: Boolean!
+  name: String!
+  updatedAt: DateTime!
+}
+
+"""Input data for creating a company"""
+input CreateCompanyInput {
+  companyId: String!
+  companyNameArabic: String
+  companyNameEnglish: String
+  countryId: String
+  establishedTypeId: String
+  hoAddress: String
+  hoLocation: String
+  isActive: CompanyStatus = ACTIVE
+  logo: String
+  numberOfBranches: Float = 0
+  title: String!
+}
+
+"""Response data for creating a company"""
+type CreateCompanyResponse {
+  company: Company
+  message: String!
+}
+
+"""Input data for creating an individual"""
+input CreateIndividualInput {
+  email: String!
+  firstName: String!
+  individualId: String!
+  isActive: IndividualStatus = ACTIVE
+  lastName: String!
+  phoneNumber: String
+}
+
 input CreateUserInput {
   deviceId: String!
   email: String!
@@ -43,6 +117,16 @@ The javascript `Date` as string. Type represents date and time as the ISO Date s
 """
 scalar DateTime
 
+"""EstablishedType lookup table"""
+type EstablishedTypeType {
+  createdAt: DateTime!
+  id: String!
+  isActive: Boolean!
+  name: String!
+  nameArabic: String
+  updatedAt: DateTime!
+}
+
 input ForgotPasswordInput {
   lastFourDigits: String!
   username: String!
@@ -51,6 +135,34 @@ input ForgotPasswordInput {
 type ForgotPasswordResponse {
   message: String!
   success: Boolean!
+}
+
+"""Individual entity"""
+type Individual {
+  createdAt: DateTime!
+  email: String!
+  firstName: String!
+  fullName: String!
+  id: ID!
+  individualId: String!
+  isActive: IndividualStatus!
+  lastName: String!
+  phoneNumber: String
+  updatedAt: DateTime!
+}
+
+"""Input data for filtering individuals"""
+input IndividualFilterInput {
+  limit: Float = 10
+  page: Float = 1
+  search: String
+  status: IndividualStatus
+}
+
+"""Individual status types"""
+enum IndividualStatus {
+  ACTIVE
+  INACTIVE
 }
 
 """Schema for Log model"""
@@ -82,8 +194,20 @@ type LoginResponse {
 }
 
 type Mutation {
+  """Create a Company"""
+  createCompany(companyData: CreateCompanyInput!): CreateCompanyResponse!
+
+  """Create an Individual"""
+  createIndividual(individualData: CreateIndividualInput!): Boolean!
+
   """Create a User"""
   createUser(userData: CreateUserInput!): CreateUserResponse!
+
+  """Delete a Company"""
+  deleteCompany(id: String!): Boolean!
+
+  """Delete an Individual"""
+  deleteIndividual(id: String!): Boolean!
 
   """Request password reset"""
   forgotPassword(forgotPasswordData: ForgotPasswordInput!): ForgotPasswordResponse!
@@ -93,6 +217,12 @@ type Mutation {
 
   """Refresh Access Token"""
   refreshAccessToken(token: String!): AuthTokens!
+
+  """Update an existing Company"""
+  updateCompany(id: String!, updateCompanyData: UpdateCompanyInput!): UpdateCompanyResponse!
+
+  """Update an existing Individual"""
+  updateIndividual(id: String!, updateIndividualData: UpdateIndividualInput!): Boolean!
 
   """Update an existing User"""
   updateUser(id: String!, updateUserData: UpdateUserInput!): UpdateUserResponse!
@@ -105,11 +235,52 @@ type Query {
   """Query for a list of Users"""
   getAllUsers: QueryUsersResponse!
 
+  """Query for a list of Companies"""
+  getCompanies(filter: CompanyFilterInput): QueryCompaniesResponse!
+
+  """Query a Company by id"""
+  getCompanyById(id: String!): QueryCompanyResponse!
+
+  """Get all active countries"""
+  getCountries: [CountryType!]!
+
+  """Get all active established types"""
+  getEstablishedTypes: [EstablishedTypeType!]!
+
+  """Query for a list of Individuals"""
+  getIndividuals(filter: IndividualFilterInput): QueryIndividualsResponse!
+
   """Query a User by token"""
   getUserById(id: String!): QueryUserResponse!
 
   """Query a User by token"""
   getUserByToken(token: String!): QueryUserResponse!
+}
+
+"""Response data for companies list"""
+type QueryCompaniesResponse {
+  companies: [Company!]!
+  limit: Float!
+  message: String!
+  page: Float!
+  total: Float!
+  totalPages: Float!
+}
+
+"""Response data for company by id"""
+type QueryCompanyResponse {
+  company: Company
+  message: String!
+}
+
+"""Response data for individuals list"""
+type QueryIndividualsResponse {
+  individuals: [Individual!]!
+  limit: Float!
+  message: String!
+  page: Float!
+  total: Float!
+  totalPages: Float!
 }
 
 """Response data for user by id"""
@@ -122,6 +293,35 @@ type QueryUserResponse {
 type QueryUsersResponse {
   message: String!
   users: [User!]
+}
+
+"""Input data for updating a company"""
+input UpdateCompanyInput {
+  companyNameArabic: String
+  companyNameEnglish: String
+  countryId: String
+  establishedTypeId: String
+  hoAddress: String
+  hoLocation: String
+  isActive: CompanyStatus
+  logo: String
+  numberOfBranches: Float
+  title: String
+}
+
+"""Response data for updating a company"""
+type UpdateCompanyResponse {
+  company: Company
+  message: String!
+}
+
+"""Input data for updating an individual"""
+input UpdateIndividualInput {
+  email: String
+  firstName: String
+  isActive: IndividualStatus
+  lastName: String
+  phoneNumber: String
 }
 
 """Input data for updating a user"""

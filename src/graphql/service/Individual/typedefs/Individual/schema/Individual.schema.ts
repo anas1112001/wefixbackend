@@ -1,5 +1,5 @@
 import { Field, ID, ObjectType } from 'type-graphql';
-import { IndividualStatus } from '../../enums/Individual.enums';
+import { IndividualStatus } from '../enums/Individual.enums';
 
 @ObjectType({
   description: 'Individual entity',

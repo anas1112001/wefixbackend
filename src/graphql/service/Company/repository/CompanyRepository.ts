@@ -1,6 +1,8 @@
 import { ApolloError } from 'apollo-server-express';
 import { Op, WhereOptions } from 'sequelize';
 import { Company } from '../../../../db/models/company.model';
+import { Country } from '../../../../db/models/country.model';
+import { EstablishedType } from '../../../../db/models/established-type.model';
 import { CompanyFilterInput } from '../typedefs/Company/inputs/CompanyFilterInput.schema';
 import { CreateCompanyInput } from '../typedefs/Company/inputs/CreateCompanyInput.schema';
 import { UpdateCompanyInput } from '../typedefs/Company/inputs/UpdateCompanyInput.schema';
@@ -25,12 +27,17 @@ class CompanyRepository {
     try {
       const newCompany = await Company.create({
         companyId: companyData.companyId,
-        establishedType: companyData.establishedType,
+        title: companyData.title,
+        companyNameArabic: companyData.companyNameArabic || null,
+        companyNameEnglish: companyData.companyNameEnglish || null,
+        countryId: companyData.countryId || null,
+        establishedTypeId: companyData.establishedTypeId || null,
+        hoAddress: companyData.hoAddress || null,
+        hoLocation: companyData.hoLocation || null,
         isActive: companyData.isActive,
         logo: companyData.logo || null,
         numberOfBranches: companyData.numberOfBranches || 0,
-        title: companyData.title,
-      });
+      } as any);
       return newCompany;
     } catch (error) {
       throw new ApolloError(`Failed to create company: ${error.message}`, 'COMPANY_CREATION_FAILED');
@@ -39,7 +46,13 @@ class CompanyRepository {
 
   private async _getCompanyById(id: string): Promise<CompanyOrm | null> {
     try {
-      const company = await Company.findOne({ where: { id } });
+      const company = await Company.findOne({
+        include: [
+          { model: Country, as: 'country' },
+          { model: EstablishedType, as: 'establishedType' },
+        ],
+        where: { id },
+      });
       return company;
     } catch (error) {
       throw new ApolloError(`Failed to get company: ${error.message}`, 'COMPANY_RETRIEVAL_FAILED');
@@ -59,7 +72,7 @@ class CompanyRepository {
       }
 
       if (filter.type) {
-        where.establishedType = filter.type;
+        where.establishedTypeId = filter.type;
       }
 
       if (filter.search) {
@@ -70,6 +83,10 @@ class CompanyRepository {
       }
 
       const { count, rows } = await Company.findAndCountAll({
+        include: [
+          { model: Country, as: 'country' },
+          { model: EstablishedType, as: 'establishedType' },
+        ],
         limit,
         offset,
         order: [['createdAt', 'DESC']],

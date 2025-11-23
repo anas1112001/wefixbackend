@@ -1,5 +1,5 @@
 import { Field, ObjectType } from 'type-graphql';
-import { Company } from '../../schema/Company.schema';
+import { Company } from '../schema/Company.schema';
 
 @ObjectType({ description: 'Response data for updating a company' })
 export class UpdateCompanyResponse {

@@ -1,13 +1,13 @@
 import { Field, InputType } from 'type-graphql';
-import { CompanyStatus, EstablishedType } from '../../enums/Company.enums';
+import { CompanyStatus } from '../enums/Company.enums';
 
 @InputType({ description: 'Input data for filtering companies' })
 export class CompanyFilterInput {
   @Field((_type) => CompanyStatus, { nullable: true })
   status?: CompanyStatus;
 
-  @Field((_type) => EstablishedType, { nullable: true })
-  type?: EstablishedType;
+  @Field({ nullable: true })
+  type?: string;
 
   @Field({ nullable: true })
   search?: string;

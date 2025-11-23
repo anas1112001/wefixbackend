@@ -1,5 +1,5 @@
 import { Field, InputType } from 'type-graphql';
-import { CompanyStatus, EstablishedType } from '../../enums/Company.enums';
+import { CompanyStatus } from '../enums/Company.enums';
 
 @InputType({ description: 'Input data for creating a company' })
 export class CreateCompanyInput {
@@ -9,11 +9,26 @@ export class CreateCompanyInput {
   @Field()
   title: string;
 
+  @Field((_type) => String, { nullable: true })
+  companyNameArabic?: string | null;
+
+  @Field((_type) => String, { nullable: true })
+  companyNameEnglish?: string | null;
+
+  @Field((_type) => String, { nullable: true })
+  countryId?: string | null;
+
+  @Field((_type) => String, { nullable: true })
+  establishedTypeId?: string | null;
+
+  @Field((_type) => String, { nullable: true })
+  hoAddress?: string | null;
+
+  @Field((_type) => String, { nullable: true })
+  hoLocation?: string | null;
+
   @Field((_type) => CompanyStatus, { defaultValue: CompanyStatus.ACTIVE })
   isActive: CompanyStatus;
-
-  @Field((_type) => EstablishedType)
-  establishedType: EstablishedType;
 
   @Field((_type) => Number, { defaultValue: 0 })
   numberOfBranches: number;
