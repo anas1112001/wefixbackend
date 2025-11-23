@@ -10,6 +10,7 @@ export declare class UserOrm extends Model {
   fullName: string
   id: string
   lastName: string
+  mobileNumber: string | null
   userNumber: string
   password: string
   userRole: UserRoles

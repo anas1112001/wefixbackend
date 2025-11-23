@@ -5,9 +5,11 @@ import { Resolver, Query, Arg, Ctx, Mutation } from 'type-graphql'
 import { generateRefreshToken, generateToken } from '../../../../lib';
 import { SharedContext } from '../../../shared/context'
 import { CreateUserInput } from '../typedefs/User/inputs/CreateUserInput.schema';
+import { ForgotPasswordInput } from '../typedefs/User/inputs/ForgotPasswordInput.schema';
 import { LoginInput } from '../typedefs/User/inputs/LoginUserInput.schema';
 import { UpdateUserInput } from '../typedefs/User/inputs/UpdateUserInput.schema';
 import { CreateUserResponse } from '../typedefs/User/responses/CreateUserResponse.schema';
+import { ForgotPasswordResponse } from '../typedefs/User/responses/ForgotPasswordResponse.schema';
 import { LoginResponse } from '../typedefs/User/responses/LoginUserResponse.schema';
 import { QueryUserResponse } from '../typedefs/User/responses/QueryUserResponse.schema';
 import { QueryUsersResponse } from '../typedefs/User/responses/QueryUsersResponse.schema';
@@ -61,7 +63,12 @@ export class UserResolver {
   ): Promise<AuthTokens> {
     try {
       const decoded = jwt.verify(token, process.env.SECRET_KEY);
-      const user = await services.userRepository.validateRefreshToken(decoded['email']);
+
+      if (typeof decoded === 'string' || !decoded.email) {
+        throw new ApolloError('Invalid token payload', 'INVALID_TOKEN');
+      }
+
+      const user = await services.userRepository.validateRefreshToken(decoded.email);
 
       if (!user) {
         throw new ApolloError('Invalid refresh token', 'INVALID_TOKEN');
@@ -179,6 +186,22 @@ export class UserResolver {
       return { message: 'User successfully updated', user };
     } catch (error) {
       throw new ApolloError(`Error updating user with ID ${id}: ${error.message}`);
+    }
+  }
+
+  @Mutation(() => ForgotPasswordResponse, { description: 'Request password reset' })
+  public async forgotPassword(
+    @Arg('forgotPasswordData') forgotPasswordData: ForgotPasswordInput,
+    @Ctx() { services }: SharedContext
+  ): Promise<ForgotPasswordResponse> {
+    try {
+      const result = await services.userRepository.forgotPassword(
+        forgotPasswordData.username,
+        forgotPasswordData.lastFourDigits
+      );
+      return result;
+    } catch (error) {
+      throw new ApolloError(`Error processing forgot password request: ${error.message}`, 'FORGOT_PASSWORD_ERROR');
     }
   }
 

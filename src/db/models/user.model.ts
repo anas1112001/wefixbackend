@@ -85,6 +85,12 @@ export class User extends Model {
   })
   public password: string;
   
+  @Column({
+    allowNull: true,
+    comment: 'Mobile phone number for password recovery',
+    type: DataTypes.STRING(15),
+  })
+  public mobileNumber: string | null
 
   @Column({
     allowNull: false,

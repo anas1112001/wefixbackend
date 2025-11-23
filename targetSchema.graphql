@@ -28,7 +28,7 @@ input CreateUserInput {
   lastName: String!
   password: String!
   userNumber: String!
-  userRole: Positions!
+  userRole: UserRoles!
 }
 
 """Response data for updating a user"""
@@ -42,6 +42,16 @@ type CreateUserResponse {
 The javascript `Date` as string. Type represents date and time as the ISO Date string.
 """
 scalar DateTime
+
+input ForgotPasswordInput {
+  lastFourDigits: String!
+  username: String!
+}
+
+type ForgotPasswordResponse {
+  message: String!
+  success: Boolean!
+}
 
 """Schema for Log model"""
 type Log {
@@ -75,6 +85,9 @@ type Mutation {
   """Create a User"""
   createUser(userData: CreateUserInput!): CreateUserResponse!
 
+  """Request password reset"""
+  forgotPassword(forgotPasswordData: ForgotPasswordInput!): ForgotPasswordResponse!
+
   """Login a User"""
   login(loginData: LoginInput!): LoginResponse!
 
@@ -83,12 +96,6 @@ type Mutation {
 
   """Update an existing User"""
   updateUser(id: String!, updateUserData: UpdateUserInput!): UpdateUserResponse!
-}
-
-"""Employee position"""
-enum Positions {
-  DOCTOR
-  STUDENT
 }
 
 type Query {
@@ -141,5 +148,12 @@ type User {
   password: String!
   updatedAt: DateTime!
   userNumber: String!
-  userRole: Positions!
+  userRole: UserRoles!
+}
+
+"""User role types"""
+enum UserRoles {
+  COMPANY
+  INDIVIDUAL
+  SUPER_ADMIN
 }

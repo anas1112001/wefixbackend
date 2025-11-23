@@ -30,7 +30,7 @@ export const USER_DATA: readonly UserData[] = [
     lastName: 'Abu Awwad',
     password: '$2a$12$Fk4mbwkI3.yAPqWmo8atZuKxl0KhEhPNXdANvHkDifPz5M/PBqqBi',
     userNumber: '9971035541',
-    userRole: UserRoles.STUDENT,
+    userRole: UserRoles.INDIVIDUAL,
   },
   {
     deviceId: 'UP1A.231105.004',
@@ -41,7 +41,7 @@ export const USER_DATA: readonly UserData[] = [
     lastName: 'Abu Awwad',
     password: '$2a$12$Fk4mbwkI3.yAPqWmo8atZuKxl0KhEhPNXdANvHkDifPz5M/PBqqBi',
     userNumber: '9971035542',
-    userRole: UserRoles.DOCTOR,
+    userRole: UserRoles.COMPANY,
   },
   {
     deviceId: 'UP1A.231105.007',
@@ -52,7 +52,7 @@ export const USER_DATA: readonly UserData[] = [
     lastName: 'Abu Awwad',
     password: '$2a$12$Fk4mbwkI3.yAPqWmo8atZuKxl0KhEhPNXdANvHkDifPz5M/PBqqBi',
     userNumber: '9971035543',
-    userRole: UserRoles.STUDENT,
+    userRole: UserRoles.INDIVIDUAL,
   },
 ];
 
