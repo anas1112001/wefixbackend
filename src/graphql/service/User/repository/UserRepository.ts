@@ -37,7 +37,6 @@ class UserRepository {
     try {
       const email = userEmail.toLocaleLowerCase();
       const user = await User.findOne({ where: { email } });
-      await user.update({ deviceId, fcmToken }, { where: { id: user.id } });
 
       if (!user || !deviceId || !fcmToken) {
         return null;
@@ -48,8 +47,8 @@ class UserRepository {
         return null;
       }
 
-      // Update the user's FCM token
-
+      // Update the user's deviceId and FCM token
+      await user.update({ deviceId, fcmToken });
 
       return user;
     } catch (error) {
