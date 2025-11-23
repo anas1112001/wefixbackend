@@ -2,7 +2,7 @@ import { ApolloError } from 'apollo-server-express';
 import { Op, WhereOptions } from 'sequelize';
 import { Company } from '../../../../db/models/company.model';
 import { Lookup } from '../../../../db/models/lookup.model';
-import { CompanyStatus } from '../typedefs/Company/enums/Company.enums';
+import { CompanyStatus, EstablishedType } from '../typedefs/Company/enums/Company.enums';
 import { CompanyFilterInput } from '../typedefs/Company/inputs/CompanyFilterInput.schema';
 import { CreateCompanyInput } from '../typedefs/Company/inputs/CreateCompanyInput.schema';
 import { UpdateCompanyInput } from '../typedefs/Company/inputs/UpdateCompanyInput.schema';
@@ -25,6 +25,30 @@ class CompanyRepository {
 
   private async _createCompany(companyData: CreateCompanyInput): Promise<CompanyOrm> {
     try {
+      // Get established type from lookup if provided
+      let establishedType = EstablishedType.LLC; // Default value
+
+      if (companyData.establishedTypeLookupId) {
+        const lookup = await Lookup.findOne({
+          where: { id: companyData.establishedTypeLookupId },
+        });
+
+        if (lookup) {
+          // Map lookup name to EstablishedType enum
+          const lookupName = lookup.name;
+
+          if (lookupName === 'LLC') {
+            establishedType = EstablishedType.LLC;
+          } else if (lookupName === 'Corporation') {
+            establishedType = EstablishedType.CORPORATION;
+          } else if (lookupName === 'Partnership') {
+            establishedType = EstablishedType.PARTNERSHIP;
+          } else if (lookupName === 'Sole Proprietorship') {
+            establishedType = EstablishedType.SOLE_PROPRIETORSHIP;
+          }
+        }
+      }
+
       const newCompany = await Company.create({
         companyId: companyData.companyId,
         title: companyData.title,
@@ -32,6 +56,7 @@ class CompanyRepository {
         companyNameEnglish: companyData.companyNameEnglish || null,
         countryLookupId: companyData.countryLookupId || null,
         establishedTypeLookupId: companyData.establishedTypeLookupId || null,
+        establishedType,
         hoAddress: companyData.hoAddress || null,
         hoLocation: companyData.hoLocation || null,
         isActive: companyData.isActive || CompanyStatus.ACTIVE,

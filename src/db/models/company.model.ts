@@ -1,7 +1,7 @@
 import { DataTypes, UUIDV4 } from 'sequelize';
 import { BelongsTo, Column, CreatedAt, ForeignKey, Model, Table, UpdatedAt } from 'sequelize-typescript';
 import { getDate, getIsoTimestamp, setDate, toLowerCase } from '../../lib';
-import { CompanyStatus } from '../../graphql/service/Company/typedefs/Company/enums/Company.enums';
+import { CompanyStatus, EstablishedType } from '../../graphql/service/Company/typedefs/Company/enums/Company.enums';
 import { Lookup } from './lookup.model';
 
 @Table({
@@ -63,6 +63,13 @@ export class Company extends Model {
 
   @BelongsTo(() => Lookup, { foreignKey: 'establishedTypeLookupId', as: 'establishedTypeLookup' })
   public establishedTypeLookup: Lookup;
+
+  @Column({
+    allowNull: false,
+    defaultValue: EstablishedType.LLC,
+    type: DataTypes.ENUM({ values: Object.values(EstablishedType) }),
+  })
+  public establishedType: EstablishedType;
 
   @Column({
     allowNull: true,
