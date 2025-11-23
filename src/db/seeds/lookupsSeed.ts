@@ -281,11 +281,69 @@ export const TEAM_LEADERS: readonly LookupData[] = [
   },
 ];
 
+// Business Models
+export const BUSINESS_MODELS: readonly LookupData[] = [
+  {
+    category: LookupCategory.BUSINESS_MODEL,
+    code: null,
+    description: 'Business to Business model',
+    id: 'd2e3f4a5-b6c7-4890-d123-456789012345',
+    isActive: true,
+    isDefault: true,
+    name: 'B2B',
+    nameArabic: 'بين الشركات',
+    orderId: 1,
+    parentLookupId: null,
+  },
+  {
+    category: LookupCategory.BUSINESS_MODEL,
+    code: null,
+    description: 'White Label business model',
+    id: 'e3f4a5b6-c7d8-4901-e234-567890123456',
+    isActive: true,
+    isDefault: false,
+    name: 'White Label',
+    nameArabic: 'العلامة البيضاء',
+    orderId: 2,
+    parentLookupId: null,
+  },
+];
+
+// Managed By
+export const MANAGED_BY: readonly LookupData[] = [
+  {
+    category: LookupCategory.MANAGED_BY,
+    code: null,
+    description: 'Managed by client team',
+    id: 'f4a5b6c7-d8e9-4012-f345-678901234567',
+    isActive: true,
+    isDefault: false,
+    name: 'Client Team',
+    nameArabic: 'فريق العميل',
+    orderId: 1,
+    parentLookupId: null,
+  },
+  {
+    category: LookupCategory.MANAGED_BY,
+    code: null,
+    description: 'Managed by WeFix team',
+    id: 'a5b6c7d8-e9f0-4123-a456-789012345678',
+    isActive: true,
+    isDefault: true,
+    name: 'WeFix Team',
+    nameArabic: 'فريق وي فيكس',
+    orderId: 2,
+    parentLookupId: null,
+  },
+];
+
 // Combined lookup data
 export const LOOKUP_DATA: readonly LookupData[] = [
+  ...BUSINESS_MODELS,
   ...COUNTRIES,
   ...ESTABLISHED_TYPES,
-  ...USER_ROLES,
+  ...MANAGED_BY,
   ...TEAM_LEADERS,
+  ...USER_ROLES,
 ];
 

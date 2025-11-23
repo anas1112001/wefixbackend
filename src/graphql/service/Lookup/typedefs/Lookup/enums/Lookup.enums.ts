@@ -2,10 +2,12 @@ import 'reflect-metadata';
 import { registerEnumType } from 'type-graphql';
 
 export enum LookupCategory {
+  BUSINESS_MODEL = 'BusinessModel',
   COUNTRY = 'Country',
   ESTABLISHED_TYPE = 'EstablishedType',
-  USER_ROLE = 'UserRole',
+  MANAGED_BY = 'ManagedBy',
   TEAM_LEADER = 'TeamLeader',
+  USER_ROLE = 'UserRole',
 }
 
 registerEnumType(LookupCategory, {

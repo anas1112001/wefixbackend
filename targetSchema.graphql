@@ -195,8 +195,10 @@ type LoginResponse {
 
 """Lookup category types"""
 enum LookupCategory {
+  BUSINESS_MODEL
   COUNTRY
   ESTABLISHED_TYPE
+  MANAGED_BY
   TEAM_LEADER
   USER_ROLE
 }

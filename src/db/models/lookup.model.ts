@@ -3,10 +3,12 @@ import { BelongsTo, Column, CreatedAt, ForeignKey, Model, Table, UpdatedAt } fro
 import { getDate, getIsoTimestamp, setDate, toLowerCase } from '../../lib';
 
 export enum LookupCategory {
+  BUSINESS_MODEL = 'BusinessModel',
   COUNTRY = 'Country',
   ESTABLISHED_TYPE = 'EstablishedType',
-  USER_ROLE = 'UserRole',
+  MANAGED_BY = 'ManagedBy',
   TEAM_LEADER = 'TeamLeader',
+  USER_ROLE = 'UserRole',
 }
 
 @Table({
