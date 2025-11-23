@@ -72,7 +72,7 @@ input CreateCompanyInput {
   establishedTypeId: String
   hoAddress: String
   hoLocation: String
-  isActive: CompanyStatus = ACTIVE
+  isActive: CompanyStatus
   logo: String
   numberOfBranches: Float = 0
   title: String!
@@ -89,7 +89,7 @@ input CreateIndividualInput {
   email: String!
   firstName: String!
   individualId: String!
-  isActive: IndividualStatus = ACTIVE
+  isActive: IndividualStatus
   lastName: String!
   phoneNumber: String
 }
@@ -250,11 +250,17 @@ type Query {
   """Query for a list of Individuals"""
   getIndividuals(filter: IndividualFilterInput): QueryIndividualsResponse!
 
+  """Get all active team leaders"""
+  getTeamLeaders: [TeamLeaderType!]!
+
   """Query a User by token"""
   getUserById(id: String!): QueryUserResponse!
 
   """Query a User by token"""
   getUserByToken(token: String!): QueryUserResponse!
+
+  """Get all active user roles"""
+  getUserRoles: [UserRoleType!]!
 }
 
 """Response data for companies list"""
@@ -293,6 +299,17 @@ type QueryUserResponse {
 type QueryUsersResponse {
   message: String!
   users: [User!]
+}
+
+"""TeamLeader lookup table"""
+type TeamLeaderType {
+  createdAt: DateTime!
+  description: String
+  id: String!
+  isActive: Boolean!
+  name: String!
+  nameArabic: String
+  updatedAt: DateTime!
 }
 
 """Input data for updating a company"""
@@ -349,6 +366,17 @@ type User {
   updatedAt: DateTime!
   userNumber: String!
   userRole: UserRoles!
+}
+
+"""UserRole lookup table"""
+type UserRoleType {
+  createdAt: DateTime!
+  description: String
+  id: String!
+  isActive: Boolean!
+  name: String!
+  nameArabic: String
+  updatedAt: DateTime!
 }
 
 """User role types"""

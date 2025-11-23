@@ -5,12 +5,14 @@ import IndividualRepository from '../../service/Individual/repository/Individual
 import CountryRepository from '../../service/Country/repository/CountryRepository'
 import EstablishedTypeRepository from '../../service/EstablishedType/repository/EstablishedTypeRepository'
 import UserRoleRepository from '../../service/UserRole/repository/UserRoleRepository'
+import TeamLeaderRepository from '../../service/TeamLeader/repository/TeamLeaderRepository'
 
 export interface ContextServices {
   companyRepository: CompanyRepository;
   countryRepository: CountryRepository;
   establishedTypeRepository: EstablishedTypeRepository;
   individualRepository: IndividualRepository;
+  teamLeaderRepository: TeamLeaderRepository;
   userRepository: UserRepository;
   userRoleRepository: UserRoleRepository;
 }
@@ -20,6 +22,7 @@ export const createContextServices = async (): Promise<ContextServices> => {
   const countryRepository = new CountryRepository();
   const establishedTypeRepository = new EstablishedTypeRepository();
   const individualRepository = new IndividualRepository();
+  const teamLeaderRepository = new TeamLeaderRepository();
   const userRepository = new UserRepository();
   const userRoleRepository = new UserRoleRepository();
 
@@ -28,6 +31,7 @@ export const createContextServices = async (): Promise<ContextServices> => {
     countryRepository,
     establishedTypeRepository,
     individualRepository,
+    teamLeaderRepository,
     userRepository,
     userRoleRepository
   };

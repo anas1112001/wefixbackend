@@ -27,8 +27,8 @@ export class CreateCompanyInput {
   @Field((_type) => String, { nullable: true })
   hoLocation?: string | null;
 
-  @Field((_type) => CompanyStatus, { defaultValue: CompanyStatus.ACTIVE })
-  isActive: CompanyStatus;
+  @Field((_type) => CompanyStatus, { nullable: true })
+  isActive?: CompanyStatus;
 
   @Field((_type) => Number, { defaultValue: 0 })
   numberOfBranches: number;

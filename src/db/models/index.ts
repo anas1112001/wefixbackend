@@ -5,6 +5,7 @@ import { Individual } from './individual.model'
 import { Country } from './country.model'
 import { EstablishedType } from './established-type.model'
 import { UserRole } from './user-role.model'
+import { TeamLeader } from './team-leader.model'
 
 export * from './log.model'
 export * from './user.model'
@@ -13,10 +14,11 @@ export * from './individual.model'
 export * from './country.model'
 export * from './established-type.model'
 export * from './user-role.model'
+export * from './team-leader.model'
 
 
 
-export const MODELS = [Log, User, Company, Individual, Country, EstablishedType, UserRole];
+export const MODELS = [Log, User, Company, Individual, Country, EstablishedType, UserRole, TeamLeader];
 
 export const setupAssociations = () => {
   // Company associations

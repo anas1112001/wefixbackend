@@ -3,6 +3,7 @@ import { Op, WhereOptions } from 'sequelize';
 import { Company } from '../../../../db/models/company.model';
 import { Country } from '../../../../db/models/country.model';
 import { EstablishedType } from '../../../../db/models/established-type.model';
+import { CompanyStatus } from '../typedefs/Company/enums/Company.enums';
 import { CompanyFilterInput } from '../typedefs/Company/inputs/CompanyFilterInput.schema';
 import { CreateCompanyInput } from '../typedefs/Company/inputs/CreateCompanyInput.schema';
 import { UpdateCompanyInput } from '../typedefs/Company/inputs/UpdateCompanyInput.schema';
@@ -34,7 +35,7 @@ class CompanyRepository {
         establishedTypeId: companyData.establishedTypeId || null,
         hoAddress: companyData.hoAddress || null,
         hoLocation: companyData.hoLocation || null,
-        isActive: companyData.isActive,
+        isActive: companyData.isActive || CompanyStatus.ACTIVE,
         logo: companyData.logo || null,
         numberOfBranches: companyData.numberOfBranches || 0,
       } as any);

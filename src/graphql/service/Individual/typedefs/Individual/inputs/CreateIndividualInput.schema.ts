@@ -18,7 +18,7 @@ export class CreateIndividualInput {
   @Field((_type) => String, { nullable: true })
   phoneNumber?: string | null;
 
-  @Field((_type) => IndividualStatus, { defaultValue: IndividualStatus.ACTIVE })
-  isActive: IndividualStatus;
+  @Field((_type) => IndividualStatus, { nullable: true })
+  isActive?: IndividualStatus;
 }
 

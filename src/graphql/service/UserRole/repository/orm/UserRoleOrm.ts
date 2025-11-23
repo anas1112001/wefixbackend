@@ -1,4 +1,4 @@
-import { UserRole } from '../../../../db/models/user-role.model';
+import { UserRole } from '../../../../../db/models/user-role.model';
 
 export class UserRoleOrm {
   public async findAll(options?: any): Promise<UserRole[]> {

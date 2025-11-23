@@ -1,4 +1,4 @@
-import { UserRole } from '../../../db/models/user-role.model';
+import { UserRole } from '../../../../db/models/user-role.model';
 import { UserRoleOrm } from './orm/UserRoleOrm';
 
 export default class UserRoleRepository {

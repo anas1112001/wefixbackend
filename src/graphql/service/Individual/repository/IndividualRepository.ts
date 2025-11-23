@@ -1,6 +1,7 @@
 import { ApolloError } from 'apollo-server-express';
 import { Op, WhereOptions } from 'sequelize';
 import { Individual } from '../../../../db/models/individual.model';
+import { IndividualStatus } from '../typedefs/Individual/enums/Individual.enums';
 import { IndividualFilterInput } from '../typedefs/Individual/inputs/IndividualFilterInput.schema';
 import { CreateIndividualInput } from '../typedefs/Individual/inputs/CreateIndividualInput.schema';
 import { UpdateIndividualInput } from '../typedefs/Individual/inputs/UpdateIndividualInput.schema';
@@ -27,7 +28,7 @@ class IndividualRepository {
         email: individualData.email,
         firstName: individualData.firstName,
         individualId: individualData.individualId,
-        isActive: individualData.isActive,
+        isActive: individualData.isActive || IndividualStatus.ACTIVE,
         lastName: individualData.lastName,
         phoneNumber: individualData.phoneNumber || null,
       });
