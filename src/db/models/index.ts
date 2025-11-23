@@ -10,6 +10,9 @@ import { Lookup } from './lookup.model'
 import { Contract } from './contract.model'
 import { Branch } from './branch.model'
 import { Zone } from './zone.model'
+import { MaintenanceService } from './maintenance-service.model'
+import { MainService } from './main-service.model'
+import { SubService } from './sub-service.model'
 
 export * from './log.model'
 export * from './user.model'
@@ -23,10 +26,13 @@ export * from './lookup.model'
 export * from './contract.model'
 export * from './branch.model'
 export * from './zone.model'
+export * from './maintenance-service.model'
+export * from './main-service.model'
+export * from './sub-service.model'
 
 
 
-export const MODELS = [Log, User, Company, Individual, Country, EstablishedType, UserRole, TeamLeader, Lookup, Contract, Branch, Zone];
+export const MODELS = [Log, User, Company, Individual, Country, EstablishedType, UserRole, TeamLeader, Lookup, Contract, Branch, Zone, MaintenanceService, MainService, SubService];
 
 export const setupAssociations = () => {
   // Company associations with Lookup
@@ -43,6 +49,14 @@ export const setupAssociations = () => {
   
   // Zone associations
   Zone.belongsTo(Branch, { foreignKey: 'branchId', as: 'branch' });
+  
+  // MaintenanceService associations
+  MaintenanceService.belongsTo(Company, { foreignKey: 'companyId', as: 'company' });
+  MaintenanceService.belongsTo(MainService, { foreignKey: 'mainServiceId', as: 'mainService' });
+  MaintenanceService.belongsTo(SubService, { foreignKey: 'subServiceId', as: 'subService' });
+  
+  // SubService associations
+  SubService.belongsTo(MainService, { foreignKey: 'mainServiceId', as: 'mainService' });
   
   // Lookup self-reference for hierarchical relationships
   Lookup.belongsTo(Lookup, { foreignKey: 'parentLookupId', as: 'parent' });

@@ -337,6 +337,10 @@ export const MANAGED_BY: readonly LookupData[] = [
   },
 ];
 
+// Main Services
+// Main services and sub services have been moved to separate tables
+// See mainServicesSeed.ts and subServicesSeed.ts
+
 // Combined lookup data
 export const LOOKUP_DATA: readonly LookupData[] = [
   ...BUSINESS_MODELS,

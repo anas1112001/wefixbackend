@@ -10,6 +10,9 @@ import LookupRepository from '../../service/Lookup/repository/LookupRepository'
 import ContractRepository from '../../service/Contract/repository/ContractRepository'
 import BranchRepository from '../../service/Branch/repository/BranchRepository'
 import ZoneRepository from '../../service/Zone/repository/ZoneRepository'
+import MaintenanceServiceRepository from '../../service/MaintenanceService/repository/MaintenanceServiceRepository'
+import MainServiceRepository from '../../service/MainService/repository/MainServiceRepository'
+import SubServiceRepository from '../../service/SubService/repository/SubServiceRepository'
 
 export interface ContextServices {
   branchRepository: BranchRepository;
@@ -19,6 +22,9 @@ export interface ContextServices {
   establishedTypeRepository: EstablishedTypeRepository;
   individualRepository: IndividualRepository;
   lookupRepository: LookupRepository;
+  mainServiceRepository: MainServiceRepository;
+  maintenanceServiceRepository: MaintenanceServiceRepository;
+  subServiceRepository: SubServiceRepository;
   teamLeaderRepository: TeamLeaderRepository;
   userRepository: UserRepository;
   userRoleRepository: UserRoleRepository;
@@ -33,6 +39,9 @@ export const createContextServices = async (): Promise<ContextServices> => {
   const establishedTypeRepository = new EstablishedTypeRepository();
   const individualRepository = new IndividualRepository();
   const lookupRepository = new LookupRepository();
+  const mainServiceRepository = new MainServiceRepository();
+  const maintenanceServiceRepository = new MaintenanceServiceRepository();
+  const subServiceRepository = new SubServiceRepository();
   const teamLeaderRepository = new TeamLeaderRepository();
   const userRepository = new UserRepository();
   const userRoleRepository = new UserRoleRepository();
@@ -46,6 +55,9 @@ export const createContextServices = async (): Promise<ContextServices> => {
     establishedTypeRepository,
     individualRepository,
     lookupRepository,
+    mainServiceRepository,
+    maintenanceServiceRepository,
+    subServiceRepository,
     teamLeaderRepository,
     userRepository,
     userRoleRepository,

@@ -20,6 +20,22 @@ type AuthTokens {
   tokenType: String!
 }
 
+"""Branch entity"""
+type Branch {
+  branchNameArabic: String
+  branchNameEnglish: String
+  branchRepresentativeName: String
+  branchTitle: String!
+  company: Company!
+  createdAt: DateTime!
+  id: ID!
+  isActive: Boolean!
+  representativeEmailAddress: String
+  representativeMobileNumber: String
+  teamLeaderLookup: LookupType
+  updatedAt: DateTime!
+}
+
 """Company entity"""
 type Company {
   companyId: String!
@@ -99,6 +115,19 @@ type CountryType {
   updatedAt: DateTime!
 }
 
+"""Input data for creating a branch"""
+input CreateBranchInput {
+  branchNameArabic: String
+  branchNameEnglish: String
+  branchRepresentativeName: String
+  branchTitle: String!
+  companyId: String!
+  isActive: Boolean = true
+  representativeEmailAddress: String
+  representativeMobileNumber: String
+  teamLeaderLookupId: String
+}
+
 """Input data for creating a company"""
 input CreateCompanyInput {
   companyId: String!
@@ -153,6 +182,14 @@ input CreateIndividualInput {
   phoneNumber: String
 }
 
+"""Input data for creating a maintenance service"""
+input CreateMaintenanceServiceInput {
+  companyId: String!
+  isActive: Boolean = true
+  mainServiceId: String!
+  subServiceId: String!
+}
+
 input CreateUserInput {
   deviceId: String!
   email: String!
@@ -169,6 +206,15 @@ type CreateUserResponse {
   message: String!
   token: AuthTokens
   user: User
+}
+
+"""Input data for creating a zone"""
+input CreateZoneInput {
+  branchId: String!
+  isActive: Boolean = true
+  zoneDescription: String
+  zoneNumber: String
+  zoneTitle: String!
 }
 
 """
@@ -278,7 +324,34 @@ type LookupType {
   updatedAt: DateTime!
 }
 
+"""MainService entity"""
+type MainService {
+  code: String
+  createdAt: DateTime!
+  description: String
+  id: ID!
+  isActive: Boolean!
+  name: String!
+  nameArabic: String
+  orderId: Float!
+  updatedAt: DateTime!
+}
+
+"""MaintenanceService entity"""
+type MaintenanceService {
+  company: Company!
+  createdAt: DateTime!
+  id: ID!
+  isActive: Boolean!
+  mainService: MainService!
+  subService: SubService!
+  updatedAt: DateTime!
+}
+
 type Mutation {
+  """Create a Branch"""
+  createBranch(branchData: CreateBranchInput!): Branch!
+
   """Create a Company"""
   createCompany(companyData: CreateCompanyInput!): CreateCompanyResponse!
 
@@ -288,8 +361,17 @@ type Mutation {
   """Create an Individual"""
   createIndividual(individualData: CreateIndividualInput!): Boolean!
 
+  """Create a MaintenanceService"""
+  createMaintenanceService(serviceData: CreateMaintenanceServiceInput!): MaintenanceService!
+
   """Create a User"""
   createUser(userData: CreateUserInput!): CreateUserResponse!
+
+  """Create a Zone"""
+  createZone(zoneData: CreateZoneInput!): Zone!
+
+  """Delete a Branch"""
+  deleteBranch(id: String!): Boolean!
 
   """Delete a Company"""
   deleteCompany(id: String!): Boolean!
@@ -299,6 +381,12 @@ type Mutation {
 
   """Delete an Individual"""
   deleteIndividual(id: String!): Boolean!
+
+  """Delete a MaintenanceService"""
+  deleteMaintenanceService(id: String!): Boolean!
+
+  """Delete a Zone"""
+  deleteZone(id: String!): Boolean!
 
   """Request password reset"""
   forgotPassword(forgotPasswordData: ForgotPasswordInput!): ForgotPasswordResponse!
@@ -323,14 +411,35 @@ type Mutation {
 }
 
 type Query {
+  """Get all active main services"""
+  getActiveMainServices: [MainService!]!
+
+  """Get all active sub services"""
+  getActiveSubServices: [SubService!]!
+
+  """Get active sub services by main service id"""
+  getActiveSubServicesByMainServiceId(mainServiceId: String!): [SubService!]!
+
   """Query for a list of Log"""
   getAllLogs: [LogResponse!]
 
   """Get all active lookups"""
   getAllLookups: [LookupType!]!
 
+  """Get all main services"""
+  getAllMainServices: [MainService!]!
+
+  """Get all sub services"""
+  getAllSubServices: [SubService!]!
+
   """Query for a list of Users"""
   getAllUsers: QueryUsersResponse!
+
+  """Query a Branch by id"""
+  getBranchById(id: String!): Branch
+
+  """Query branches by company id"""
+  getBranchesByCompanyId(companyId: String!): [Branch!]!
 
   """Query for a list of Companies"""
   getCompanies(filter: CompanyFilterInput): QueryCompaniesResponse!
@@ -359,6 +468,21 @@ type Query {
   """Get all lookups by category"""
   getLookupsByCategory(category: LookupCategory!): [LookupType!]!
 
+  """Get a main service by id"""
+  getMainServiceById(id: String!): MainService
+
+  """Query a MaintenanceService by id"""
+  getMaintenanceServiceById(id: String!): MaintenanceService
+
+  """Query maintenance services by company id"""
+  getMaintenanceServicesByCompanyId(companyId: String!): [MaintenanceService!]!
+
+  """Get a sub service by id"""
+  getSubServiceById(id: String!): SubService
+
+  """Get sub services by main service id"""
+  getSubServicesByMainServiceId(mainServiceId: String!): [SubService!]!
+
   """Get all active team leaders"""
   getTeamLeaders: [TeamLeaderType!]!
 
@@ -370,6 +494,12 @@ type Query {
 
   """Get all active user roles"""
   getUserRoles: [UserRoleType!]!
+
+  """Query a Zone by id"""
+  getZoneById(id: String!): Zone
+
+  """Query zones by branch id"""
+  getZonesByBranchId(branchId: String!): [Zone!]!
 }
 
 """Response data for companies list"""
@@ -418,6 +548,20 @@ type QueryUserResponse {
 type QueryUsersResponse {
   message: String!
   users: [User!]
+}
+
+"""SubService entity"""
+type SubService {
+  code: String
+  createdAt: DateTime!
+  description: String
+  id: ID!
+  isActive: Boolean!
+  mainService: MainService!
+  name: String!
+  nameArabic: String
+  orderId: Float!
+  updatedAt: DateTime!
 }
 
 """TeamLeader lookup table"""
@@ -520,4 +664,16 @@ enum UserRoles {
   COMPANY
   INDIVIDUAL
   SUPER_ADMIN
+}
+
+"""Zone entity"""
+type Zone {
+  branch: Branch!
+  createdAt: DateTime!
+  id: ID!
+  isActive: Boolean!
+  updatedAt: DateTime!
+  zoneDescription: String
+  zoneNumber: String
+  zoneTitle: String!
 }

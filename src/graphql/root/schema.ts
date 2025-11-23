@@ -18,9 +18,12 @@ import { LookupResolver } from '../service/Lookup/resolver/LookupResolver'
 import { ContractResolver } from '../service/Contract/resolver/ContractResolver'
 import { BranchResolver } from '../service/Branch/resolver/BranchResolver'
 import { ZoneResolver } from '../service/Zone/resolver/ZoneResolver'
+import { MaintenanceServiceResolver } from '../service/MaintenanceService/resolver/MaintenanceServiceResolver'
+import { MainServiceResolver } from '../service/MainService/resolver/MainServiceResolver'
+import { SubServiceResolver } from '../service/SubService/resolver/SubServiceResolver'
 
 
-const resolvers: BuildSchemaOptions['resolvers'] = [UserResolver, LogResolver, CompanyResolver, IndividualResolver, CountryResolver, EstablishedTypeResolver, UserRoleResolver, TeamLeaderResolver, LookupResolver, ContractResolver, BranchResolver, ZoneResolver ]
+const resolvers: BuildSchemaOptions['resolvers'] = [UserResolver, LogResolver, CompanyResolver, IndividualResolver, CountryResolver, EstablishedTypeResolver, UserRoleResolver, TeamLeaderResolver, LookupResolver, ContractResolver, BranchResolver, ZoneResolver, MaintenanceServiceResolver, MainServiceResolver, SubServiceResolver ]
 
 const options = {
   resolvers,
