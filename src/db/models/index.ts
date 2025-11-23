@@ -6,6 +6,7 @@ import { Country } from './country.model'
 import { EstablishedType } from './established-type.model'
 import { UserRole } from './user-role.model'
 import { TeamLeader } from './team-leader.model'
+import { Lookup } from './lookup.model'
 
 export * from './log.model'
 export * from './user.model'
@@ -15,13 +16,17 @@ export * from './country.model'
 export * from './established-type.model'
 export * from './user-role.model'
 export * from './team-leader.model'
+export * from './lookup.model'
 
 
 
-export const MODELS = [Log, User, Company, Individual, Country, EstablishedType, UserRole, TeamLeader];
+export const MODELS = [Log, User, Company, Individual, Country, EstablishedType, UserRole, TeamLeader, Lookup];
 
 export const setupAssociations = () => {
-  // Company associations
-  Company.belongsTo(Country, { foreignKey: 'countryId', as: 'country' });
-  Company.belongsTo(EstablishedType, { foreignKey: 'establishedTypeId', as: 'establishedType' });
+  // Company associations with Lookup
+  Company.belongsTo(Lookup, { foreignKey: 'countryLookupId', as: 'countryLookup' });
+  Company.belongsTo(Lookup, { foreignKey: 'establishedTypeLookupId', as: 'establishedTypeLookup' });
+  
+  // Lookup self-reference for hierarchical relationships
+  Lookup.belongsTo(Lookup, { foreignKey: 'parentLookupId', as: 'parent' });
 }

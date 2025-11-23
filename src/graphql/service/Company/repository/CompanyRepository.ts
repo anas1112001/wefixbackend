@@ -1,8 +1,7 @@
 import { ApolloError } from 'apollo-server-express';
 import { Op, WhereOptions } from 'sequelize';
 import { Company } from '../../../../db/models/company.model';
-import { Country } from '../../../../db/models/country.model';
-import { EstablishedType } from '../../../../db/models/established-type.model';
+import { Lookup } from '../../../../db/models/lookup.model';
 import { CompanyStatus } from '../typedefs/Company/enums/Company.enums';
 import { CompanyFilterInput } from '../typedefs/Company/inputs/CompanyFilterInput.schema';
 import { CreateCompanyInput } from '../typedefs/Company/inputs/CreateCompanyInput.schema';
@@ -31,8 +30,8 @@ class CompanyRepository {
         title: companyData.title,
         companyNameArabic: companyData.companyNameArabic || null,
         companyNameEnglish: companyData.companyNameEnglish || null,
-        countryId: companyData.countryId || null,
-        establishedTypeId: companyData.establishedTypeId || null,
+        countryLookupId: companyData.countryLookupId || null,
+        establishedTypeLookupId: companyData.establishedTypeLookupId || null,
         hoAddress: companyData.hoAddress || null,
         hoLocation: companyData.hoLocation || null,
         isActive: companyData.isActive || CompanyStatus.ACTIVE,
@@ -49,8 +48,8 @@ class CompanyRepository {
     try {
       const company = await Company.findOne({
         include: [
-          { model: Country, as: 'country' },
-          { model: EstablishedType, as: 'establishedType' },
+          { model: Lookup, as: 'countryLookup' },
+          { model: Lookup, as: 'establishedTypeLookup' },
         ],
         where: { id },
       });
@@ -73,7 +72,7 @@ class CompanyRepository {
       }
 
       if (filter.type) {
-        where.establishedTypeId = filter.type;
+        where.establishedTypeLookupId = filter.type;
       }
 
       if (filter.search) {
@@ -85,8 +84,8 @@ class CompanyRepository {
 
       const { count, rows } = await Company.findAndCountAll({
         include: [
-          { model: Country, as: 'country' },
-          { model: EstablishedType, as: 'establishedType' },
+          { model: Lookup, as: 'countryLookup' },
+          { model: Lookup, as: 'establishedTypeLookup' },
         ],
         limit,
         offset,

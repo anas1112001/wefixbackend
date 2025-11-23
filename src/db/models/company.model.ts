@@ -2,8 +2,7 @@ import { DataTypes, UUIDV4 } from 'sequelize';
 import { BelongsTo, Column, CreatedAt, ForeignKey, Model, Table, UpdatedAt } from 'sequelize-typescript';
 import { getDate, getIsoTimestamp, setDate, toLowerCase } from '../../lib';
 import { CompanyStatus } from '../../graphql/service/Company/typedefs/Company/enums/Company.enums';
-import { Country } from './country.model';
-import { EstablishedType } from './established-type.model';
+import { Lookup } from './lookup.model';
 
 @Table({
   modelName: 'Company',
@@ -45,25 +44,25 @@ export class Company extends Model {
   })
   public companyNameEnglish: string | null;
 
-  @ForeignKey(() => Country)
+  @ForeignKey(() => Lookup)
   @Column({
     allowNull: true,
     type: DataTypes.UUID,
   })
-  public countryId: string | null;
+  public countryLookupId: string | null;
 
-  @BelongsTo(() => Country)
-  public country: Country;
+  @BelongsTo(() => Lookup, { foreignKey: 'countryLookupId', as: 'countryLookup' })
+  public countryLookup: Lookup;
 
-  @ForeignKey(() => EstablishedType)
+  @ForeignKey(() => Lookup)
   @Column({
     allowNull: true,
     type: DataTypes.UUID,
   })
-  public establishedTypeId: string | null;
+  public establishedTypeLookupId: string | null;
 
-  @BelongsTo(() => EstablishedType)
-  public establishedType: EstablishedType;
+  @BelongsTo(() => Lookup, { foreignKey: 'establishedTypeLookupId', as: 'establishedTypeLookup' })
+  public establishedTypeLookup: Lookup;
 
   @Column({
     allowNull: true,

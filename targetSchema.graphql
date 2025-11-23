@@ -25,9 +25,9 @@ type Company {
   companyId: String!
   companyNameArabic: String
   companyNameEnglish: String
-  country: CountryType
+  countryLookup: LookupType
   createdAt: DateTime!
-  establishedType: EstablishedTypeType
+  establishedTypeLookup: LookupType
   hoAddress: String
   hoLocation: String
   id: ID!
@@ -68,8 +68,8 @@ input CreateCompanyInput {
   companyId: String!
   companyNameArabic: String
   companyNameEnglish: String
-  countryId: String
-  establishedTypeId: String
+  countryLookupId: String
+  establishedTypeLookupId: String
   hoAddress: String
   hoLocation: String
   isActive: CompanyStatus
@@ -193,6 +193,30 @@ type LoginResponse {
   user: User
 }
 
+"""Lookup category types"""
+enum LookupCategory {
+  COUNTRY
+  ESTABLISHED_TYPE
+  TEAM_LEADER
+  USER_ROLE
+}
+
+"""Unified Lookup table"""
+type LookupType {
+  category: String!
+  code: String
+  createdAt: DateTime!
+  description: String
+  id: String!
+  isActive: Boolean!
+  isDefault: Boolean!
+  name: String!
+  nameArabic: String
+  orderId: Float!
+  parentLookupId: String
+  updatedAt: DateTime!
+}
+
 type Mutation {
   """Create a Company"""
   createCompany(companyData: CreateCompanyInput!): CreateCompanyResponse!
@@ -232,6 +256,9 @@ type Query {
   """Query for a list of Log"""
   getAllLogs: [LogResponse!]
 
+  """Get all active lookups"""
+  getAllLookups: [LookupType!]!
+
   """Query for a list of Users"""
   getAllUsers: QueryUsersResponse!
 
@@ -249,6 +276,12 @@ type Query {
 
   """Query for a list of Individuals"""
   getIndividuals(filter: IndividualFilterInput): QueryIndividualsResponse!
+
+  """Get lookup by id"""
+  getLookupById(id: String!): LookupType
+
+  """Get all lookups by category"""
+  getLookupsByCategory(category: LookupCategory!): [LookupType!]!
 
   """Get all active team leaders"""
   getTeamLeaders: [TeamLeaderType!]!
@@ -316,8 +349,8 @@ type TeamLeaderType {
 input UpdateCompanyInput {
   companyNameArabic: String
   companyNameEnglish: String
-  countryId: String
-  establishedTypeId: String
+  countryLookupId: String
+  establishedTypeLookupId: String
   hoAddress: String
   hoLocation: String
   isActive: CompanyStatus

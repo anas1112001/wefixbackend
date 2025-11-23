@@ -16,10 +16,10 @@ export class CreateCompanyInput {
   companyNameEnglish?: string | null;
 
   @Field((_type) => String, { nullable: true })
-  countryId?: string | null;
+  countryLookupId?: string | null;
 
   @Field((_type) => String, { nullable: true })
-  establishedTypeId?: string | null;
+  establishedTypeLookupId?: string | null;
 
   @Field((_type) => String, { nullable: true })
   hoAddress?: string | null;

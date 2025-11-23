@@ -1,5 +1,6 @@
 import { Model } from 'sequelize-typescript';
 import { CompanyStatus } from '../../typedefs/Company/enums/Company.enums';
+import { Lookup } from '../../../../../db/models/lookup.model';
 
 export declare class CompanyOrm extends Model {
   id: string;
@@ -7,8 +8,8 @@ export declare class CompanyOrm extends Model {
   title: string;
   companyNameArabic: string | null;
   companyNameEnglish: string | null;
-  countryId: string | null;
-  establishedTypeId: string | null;
+  countryLookupId: string | null;
+  establishedTypeLookupId: string | null;
   hoAddress: string | null;
   hoLocation: string | null;
   isActive: CompanyStatus;
@@ -16,5 +17,7 @@ export declare class CompanyOrm extends Model {
   logo: string | null;
   createdAt: Date;
   updatedAt: Date;
+  countryLookup?: Lookup;
+  establishedTypeLookup?: Lookup;
 }
 

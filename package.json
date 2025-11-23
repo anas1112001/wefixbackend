@@ -14,6 +14,7 @@
     "migrate:down": "tsc && node dist/migrator.js down",
     "migrate:status": "tsc && node dist/migrator.js status",
     "migrate:clean": "rm -f src/db/migrations/*.ts dist/db/migrations/*.js",
+    "seed:lookups": "tsc && node dist/scripts/seed-lookups.js",
     "pretest": "eslint --ext .ts . --fix --ignore-path .gitignore .",
     "start": "tsc && node dist/server.js",
     "test": "cp -n default.env .env; jest",

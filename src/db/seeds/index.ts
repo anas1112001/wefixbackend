@@ -1,1 +1,2 @@
-export * from './usersSeed'
+export * from './usersSeed';
+export * from './lookupsSeed';
