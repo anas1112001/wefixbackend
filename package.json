@@ -17,6 +17,8 @@
     "seed:lookups": "tsc && node dist/scripts/seed-lookups.js",
     "seed:companies": "tsc && node dist/scripts/seed-companies.js",
     "seed:contracts": "tsc && node dist/scripts/seed-contracts.js",
+    "seed:branches": "tsc && node dist/scripts/seed-branches.js",
+    "seed:zones": "tsc && node dist/scripts/seed-zones.js",
     "pretest": "eslint --ext .ts . --fix --ignore-path .gitignore .",
     "start": "tsc && node dist/server.js",
     "test": "cp -n default.env .env; jest",

@@ -1,5 +1,7 @@
 import 'reflect-metadata'
+import './settings' // Load environment variables
 import { ApolloServer } from 'apollo-server-express'
+import cors from 'cors'
 import express, { Application } from 'express'
 import fs from 'fs';
 import https from 'https';
@@ -39,9 +41,30 @@ export class Server {
 
   private async startGraphql() {
     const schema = await generateSchema('targetSchema.graphql')
-    const server = new ApolloServer({ context: async (req, res) => await createContext(req, res), schema })
+    const server = new ApolloServer({ 
+      context: async (req, res) => await createContext(req, res), 
+      schema,
+    })
     await server.start()
-    server.applyMiddleware({ app: this.app })
+    server.applyMiddleware({ 
+      app: this.app,
+      cors: {
+        credentials: true,
+        origin: this.getAllowedOrigins(),
+      },
+    })
+  }
+
+  private getAllowedOrigins(): string[] {
+    const origins = process.env.CORS_ORIGINS?.split(',').map(origin => origin.trim()).filter(Boolean) || [];
+    
+    // Add default origins if not in env
+    const defaultOrigins = [
+      'http://localhost:3000',
+      'http://localhost:3001',
+    ];
+    
+    return [...new Set([...defaultOrigins, ...origins])];
   }
 
   private listen() {
@@ -89,6 +112,24 @@ export class Server {
 
   initilizeServer = async () => {
     this.establishDBConnection()
+    
+    // Configure CORS
+    const allowedOrigins = this.getAllowedOrigins();
+    const corsOptions = {
+      credentials: true,
+      origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
+        // Allow requests with no origin (like mobile apps or curl requests)
+        if (!origin || allowedOrigins.includes(origin)) {
+          callback(null, true);
+        } else {
+          callback(new Error('Not allowed by CORS'));
+        }
+      },
+    };
+    
+    this.app.use(cors(corsOptions));
+    this.app.use(express.json());
+    this.app.use(express.urlencoded({ extended: true }));
     this.app.use(express.static(path.join(__dirname, '..', 'public')));
     this.app.use('/upload', uploadRoute);
     await this.startGraphql()

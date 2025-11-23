@@ -8,8 +8,11 @@ import UserRoleRepository from '../../service/UserRole/repository/UserRoleReposi
 import TeamLeaderRepository from '../../service/TeamLeader/repository/TeamLeaderRepository'
 import LookupRepository from '../../service/Lookup/repository/LookupRepository'
 import ContractRepository from '../../service/Contract/repository/ContractRepository'
+import BranchRepository from '../../service/Branch/repository/BranchRepository'
+import ZoneRepository from '../../service/Zone/repository/ZoneRepository'
 
 export interface ContextServices {
+  branchRepository: BranchRepository;
   companyRepository: CompanyRepository;
   contractRepository: ContractRepository;
   countryRepository: CountryRepository;
@@ -19,9 +22,11 @@ export interface ContextServices {
   teamLeaderRepository: TeamLeaderRepository;
   userRepository: UserRepository;
   userRoleRepository: UserRoleRepository;
+  zoneRepository: ZoneRepository;
 }
 
 export const createContextServices = async (): Promise<ContextServices> => {
+  const branchRepository = new BranchRepository();
   const companyRepository = new CompanyRepository();
   const contractRepository = new ContractRepository();
   const countryRepository = new CountryRepository();
@@ -31,8 +36,10 @@ export const createContextServices = async (): Promise<ContextServices> => {
   const teamLeaderRepository = new TeamLeaderRepository();
   const userRepository = new UserRepository();
   const userRoleRepository = new UserRoleRepository();
+  const zoneRepository = new ZoneRepository();
 
   return {
+    branchRepository,
     companyRepository,
     contractRepository,
     countryRepository,
@@ -41,7 +48,8 @@ export const createContextServices = async (): Promise<ContextServices> => {
     lookupRepository,
     teamLeaderRepository,
     userRepository,
-    userRoleRepository
+    userRoleRepository,
+    zoneRepository
   };
 };
 
