@@ -53,6 +53,42 @@ enum CompanyStatus {
   INACTIVE
 }
 
+"""Contract entity"""
+type Contract {
+  businessModelLookup: LookupType!
+  company: Company!
+  contractDescription: String
+  contractEndDate: DateTime
+  contractFiles: String
+  contractReference: String!
+  contractStartDate: DateTime
+  contractTitle: String!
+  contractValue: Float
+  createdAt: DateTime!
+  id: ID!
+  isActive: Boolean!
+  numberOfBranches: Float!
+  numberOfCorrectiveTickets: Float!
+  numberOfPreventiveTickets: Float!
+  numberOfTeamLeaders: Float!
+  updatedAt: DateTime!
+}
+
+"""Input data for filtering contracts"""
+input ContractFilterInput {
+  businessModel: String
+  limit: Float = 10
+  page: Float = 1
+  search: String
+  status: ContractStatus
+}
+
+"""Contract status types"""
+enum ContractStatus {
+  ACTIVE
+  INACTIVE
+}
+
 """Country lookup table"""
 type CountryType {
   code: String
@@ -81,6 +117,29 @@ input CreateCompanyInput {
 """Response data for creating a company"""
 type CreateCompanyResponse {
   company: Company
+  message: String!
+}
+
+"""Input data for creating a contract"""
+input CreateContractInput {
+  businessModelLookupId: String!
+  companyId: String!
+  contractDescription: String
+  contractEndDate: DateTime
+  contractFiles: String
+  contractStartDate: DateTime
+  contractTitle: String!
+  contractValue: Float
+  isActive: Boolean = true
+  numberOfBranches: Float = 0
+  numberOfCorrectiveTickets: Float = 0
+  numberOfPreventiveTickets: Float = 0
+  numberOfTeamLeaders: Float = 0
+}
+
+"""Response data for creating a contract"""
+type CreateContractResponse {
+  contract: Contract
   message: String!
 }
 
@@ -223,6 +282,9 @@ type Mutation {
   """Create a Company"""
   createCompany(companyData: CreateCompanyInput!): CreateCompanyResponse!
 
+  """Create a Contract"""
+  createContract(contractData: CreateContractInput!): CreateContractResponse!
+
   """Create an Individual"""
   createIndividual(individualData: CreateIndividualInput!): Boolean!
 
@@ -231,6 +293,9 @@ type Mutation {
 
   """Delete a Company"""
   deleteCompany(id: String!): Boolean!
+
+  """Delete a Contract"""
+  deleteContract(id: String!): Boolean!
 
   """Delete an Individual"""
   deleteIndividual(id: String!): Boolean!
@@ -246,6 +311,9 @@ type Mutation {
 
   """Update an existing Company"""
   updateCompany(id: String!, updateCompanyData: UpdateCompanyInput!): UpdateCompanyResponse!
+
+  """Update an existing Contract"""
+  updateContract(id: String!, updateContractData: UpdateContractInput!): CreateContractResponse!
 
   """Update an existing Individual"""
   updateIndividual(id: String!, updateIndividualData: UpdateIndividualInput!): Boolean!
@@ -269,6 +337,12 @@ type Query {
 
   """Query a Company by id"""
   getCompanyById(id: String!): QueryCompanyResponse!
+
+  """Query a Contract by id"""
+  getContractById(id: String!): CreateContractResponse!
+
+  """Query for a list of Contracts"""
+  getContracts(filter: ContractFilterInput): QueryContractsResponse!
 
   """Get all active countries"""
   getCountries: [CountryType!]!
@@ -312,6 +386,16 @@ type QueryCompaniesResponse {
 type QueryCompanyResponse {
   company: Company
   message: String!
+}
+
+"""Response data for contracts list"""
+type QueryContractsResponse {
+  contracts: [Contract!]!
+  limit: Float!
+  message: String!
+  page: Float!
+  total: Float!
+  totalPages: Float!
 }
 
 """Response data for individuals list"""
@@ -365,6 +449,23 @@ input UpdateCompanyInput {
 type UpdateCompanyResponse {
   company: Company
   message: String!
+}
+
+"""Input data for updating a contract"""
+input UpdateContractInput {
+  businessModelLookupId: String
+  companyId: String
+  contractDescription: String
+  contractEndDate: DateTime
+  contractFiles: String
+  contractStartDate: DateTime
+  contractTitle: String
+  contractValue: Float
+  isActive: Boolean
+  numberOfBranches: Float
+  numberOfCorrectiveTickets: Float
+  numberOfPreventiveTickets: Float
+  numberOfTeamLeaders: Float
 }
 
 """Input data for updating an individual"""

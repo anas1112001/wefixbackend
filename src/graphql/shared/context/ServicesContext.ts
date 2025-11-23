@@ -7,9 +7,11 @@ import EstablishedTypeRepository from '../../service/EstablishedType/repository/
 import UserRoleRepository from '../../service/UserRole/repository/UserRoleRepository'
 import TeamLeaderRepository from '../../service/TeamLeader/repository/TeamLeaderRepository'
 import LookupRepository from '../../service/Lookup/repository/LookupRepository'
+import ContractRepository from '../../service/Contract/repository/ContractRepository'
 
 export interface ContextServices {
   companyRepository: CompanyRepository;
+  contractRepository: ContractRepository;
   countryRepository: CountryRepository;
   establishedTypeRepository: EstablishedTypeRepository;
   individualRepository: IndividualRepository;
@@ -21,6 +23,7 @@ export interface ContextServices {
 
 export const createContextServices = async (): Promise<ContextServices> => {
   const companyRepository = new CompanyRepository();
+  const contractRepository = new ContractRepository();
   const countryRepository = new CountryRepository();
   const establishedTypeRepository = new EstablishedTypeRepository();
   const individualRepository = new IndividualRepository();
@@ -31,6 +34,7 @@ export const createContextServices = async (): Promise<ContextServices> => {
 
   return {
     companyRepository,
+    contractRepository,
     countryRepository,
     establishedTypeRepository,
     individualRepository,

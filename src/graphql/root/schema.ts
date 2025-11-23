@@ -15,9 +15,10 @@ import { EstablishedTypeResolver } from '../service/EstablishedType/resolver/Est
 import { UserRoleResolver } from '../service/UserRole/resolver/UserRoleResolver'
 import { TeamLeaderResolver } from '../service/TeamLeader/resolver/TeamLeaderResolver'
 import { LookupResolver } from '../service/Lookup/resolver/LookupResolver'
+import { ContractResolver } from '../service/Contract/resolver/ContractResolver'
 
 
-const resolvers: BuildSchemaOptions['resolvers'] = [UserResolver, LogResolver, CompanyResolver, IndividualResolver, CountryResolver, EstablishedTypeResolver, UserRoleResolver, TeamLeaderResolver, LookupResolver ]
+const resolvers: BuildSchemaOptions['resolvers'] = [UserResolver, LogResolver, CompanyResolver, IndividualResolver, CountryResolver, EstablishedTypeResolver, UserRoleResolver, TeamLeaderResolver, LookupResolver, ContractResolver ]
 
 const options = {
   resolvers,
