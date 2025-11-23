@@ -8,9 +8,11 @@ import { gql } from 'graphql-tag'
 
 import { LogResolver } from '../service/Log/LogResolver'
 import { UserResolver } from '../service/User/resolver/UserResolver'
+import { CompanyResolver } from '../service/Company/resolver/CompanyResolver'
+import { IndividualResolver } from '../service/Individual/resolver/IndividualResolver'
 
 
-const resolvers: BuildSchemaOptions['resolvers'] = [UserResolver, LogResolver ]
+const resolvers: BuildSchemaOptions['resolvers'] = [UserResolver, LogResolver, CompanyResolver, IndividualResolver ]
 
 const options = {
   resolvers,
