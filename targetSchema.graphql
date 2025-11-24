@@ -191,6 +191,7 @@ input CreateMaintenanceServiceInput {
 }
 
 input CreateUserInput {
+  companyId: String
   deviceId: String!
   email: String!
   fcmToken: String!
@@ -304,6 +305,7 @@ enum LookupCategory {
   COUNTRY
   ESTABLISHED_TYPE
   MANAGED_BY
+  STATE
   TEAM_LEADER
   USER_ROLE
 }
@@ -636,6 +638,8 @@ type UpdateUserResponse {
 
 """Resoponse for the user item"""
 type User {
+  company: Company
+  companyId: String
   createdAt: DateTime!
   email: String!
   firstName: String!

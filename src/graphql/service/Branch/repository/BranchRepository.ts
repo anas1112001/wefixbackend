@@ -31,6 +31,13 @@ class BranchRepository {
         teamLeaderLookupId: branchData.teamLeaderLookupId || null,
         isActive: branchData.isActive !== undefined ? branchData.isActive : true,
       } as any);
+
+      if (branchData.companyId) {
+        await Company.increment('numberOfBranches', {
+          by: 1,
+          where: { id: branchData.companyId },
+        });
+      }
       
       return await this._getBranchById(newBranch.id) || newBranch;
     } catch (error) {
@@ -71,7 +78,24 @@ class BranchRepository {
 
   private async _deleteBranchById(id: string): Promise<boolean> {
     try {
+      const branch = await Branch.findOne({
+        attributes: ['companyId'],
+        where: { id },
+      });
+
+      if (!branch) {
+        return false;
+      }
+
       const deleted = await Branch.destroy({ where: { id } });
+
+      if (deleted > 0 && branch.companyId) {
+        await Company.increment('numberOfBranches', {
+          by: -1,
+          where: { id: branch.companyId },
+        });
+      }
+
       return deleted > 0;
     } catch (error) {
       throw new ApolloError(`Failed to delete branch with ID ${id}: ${error.message}`, 'BRANCH_DELETION_FAILED');

@@ -1,9 +1,9 @@
 import { DataTypes, UUIDV4 } from 'sequelize'
-import { Column, CreatedAt, Model, Table, UpdatedAt } from 'sequelize-typescript'
-
+import { BelongsTo, Column, CreatedAt, ForeignKey, Model, Table, UpdatedAt } from 'sequelize-typescript'
 
 import {  UserRoles } from '../../graphql/service/User/typedefs/User/enums/User.enums'
 import { getDate, getIsoTimestamp, getUserFullName, setDate, toLowerCase } from '../../lib'
+import { Company } from './company.model'
 
 @Table({
   modelName: 'User',
@@ -33,14 +33,14 @@ export class User extends Model {
   @Column({
     allowNull: false,
     set: toLowerCase('firstName'),
-    type: DataTypes.STRING(32),
+    type: DataTypes.STRING(128),
   })
   public firstName: string
 
   @Column({
     allowNull: false,
     set: toLowerCase('lastName'),
-    type: DataTypes.STRING(32),
+    type: DataTypes.STRING(128),
   })
   public lastName: string
 
@@ -55,7 +55,7 @@ export class User extends Model {
   @Column({
     allowNull: false,
     set: toLowerCase('email'),
-    type: DataTypes.STRING(32),
+    type: DataTypes.STRING(128),
     unique: true,
     validate: {
       isEmail: true,
@@ -67,7 +67,7 @@ export class User extends Model {
   @Column({
     allowNull: false,
     set: toLowerCase('deviceId'),
-    type: DataTypes.STRING(32),
+    type: DataTypes.STRING(128),
     unique: false,
   })
   public deviceId: string
@@ -98,6 +98,16 @@ export class User extends Model {
     type: DataTypes.ENUM({ values: Object.values(UserRoles) }),
   })
   public userRole: UserRoles | null
+
+  @ForeignKey(() => Company)
+  @Column({
+    allowNull: true,
+    type: DataTypes.UUID,
+  })
+  public companyId: string | null
+
+  @BelongsTo(() => Company, { foreignKey: 'companyId', as: 'company' })
+  public company?: Company | null
 
 
   @CreatedAt

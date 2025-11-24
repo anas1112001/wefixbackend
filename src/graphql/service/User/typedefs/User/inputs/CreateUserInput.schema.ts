@@ -28,5 +28,6 @@ export class CreateUserInput {
   @Field()
   password: string;
 
-
+  @Field({ nullable: true })
+  companyId?: string;
 }

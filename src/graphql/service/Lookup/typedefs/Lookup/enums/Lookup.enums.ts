@@ -6,6 +6,7 @@ export enum LookupCategory {
   COUNTRY = 'Country',
   ESTABLISHED_TYPE = 'EstablishedType',
   MANAGED_BY = 'ManagedBy',
+  STATE = 'State',
   TEAM_LEADER = 'TeamLeader',
   USER_ROLE = 'UserRole',
 }

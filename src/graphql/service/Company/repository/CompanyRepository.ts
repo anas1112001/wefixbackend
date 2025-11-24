@@ -2,6 +2,11 @@ import { ApolloError } from 'apollo-server-express';
 import { Op, WhereOptions } from 'sequelize';
 import { Company } from '../../../../db/models/company.model';
 import { Lookup } from '../../../../db/models/lookup.model';
+import { Branch } from '../../../../db/models/branch.model';
+import { Zone } from '../../../../db/models/zone.model';
+import { Contract } from '../../../../db/models/contract.model';
+import { MaintenanceService } from '../../../../db/models/maintenance-service.model';
+import { User } from '../../../../db/models/user.model';
 import { CompanyStatus, EstablishedType } from '../typedefs/Company/enums/Company.enums';
 import { CompanyFilterInput } from '../typedefs/Company/inputs/CompanyFilterInput.schema';
 import { CreateCompanyInput } from '../typedefs/Company/inputs/CreateCompanyInput.schema';
@@ -147,8 +152,40 @@ class CompanyRepository {
 
   private async _deleteCompanyById(id: string): Promise<boolean> {
     try {
-      const deleted = await Company.destroy({ where: { id } });
-      return deleted > 0;
+      const sequelize = Company.sequelize;
+
+      if (!sequelize) {
+        throw new ApolloError('Database connection not available', 'SEQUELIZE_NOT_INITIALIZED');
+      }
+
+      return await sequelize.transaction(async (transaction) => {
+        const company = await Company.findOne({ where: { id }, transaction });
+
+        if (!company) {
+          return false;
+        }
+
+        await MaintenanceService.destroy({ where: { companyId: id }, transaction });
+        await Contract.destroy({ where: { companyId: id }, transaction });
+        await User.destroy({ where: { companyId: id }, transaction });
+
+        const branches = await Branch.findAll({
+          attributes: ['id'],
+          where: { companyId: id },
+          transaction,
+        });
+
+        const branchIds = branches.map((branch) => branch.id);
+
+        if (branchIds.length) {
+          await Zone.destroy({ where: { branchId: branchIds }, transaction });
+        }
+
+        await Branch.destroy({ where: { companyId: id }, transaction });
+
+        const deleted = await Company.destroy({ where: { id }, transaction });
+        return deleted > 0;
+      });
     } catch (error) {
       throw new ApolloError(`Failed to delete company with ID ${id}: ${error.message}`, 'COMPANY_DELETION_FAILED');
     }

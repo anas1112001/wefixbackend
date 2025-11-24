@@ -127,6 +127,7 @@ class UserRepository {
       }
 
       const userCreationData = {
+        companyId: userData.companyId || null,
         deviceId: userData.deviceId,
         email: userData.email.toLocaleLowerCase(),
         fcmToken: userData.fcmToken,

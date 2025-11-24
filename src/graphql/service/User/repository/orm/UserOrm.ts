@@ -15,4 +15,5 @@ export declare class UserOrm extends Model {
   password: string
   userRole: UserRoles
   fcmToken: string
+  companyId: string | null
 }

@@ -42,21 +42,29 @@ export const setupAssociations = () => {
   // Contract associations
   Contract.belongsTo(Company, { foreignKey: 'companyId', as: 'company' });
   Contract.belongsTo(Lookup, { foreignKey: 'businessModelLookupId', as: 'businessModelLookup' });
+  Company.hasMany(Contract, { foreignKey: 'companyId', as: 'contracts' });
   
   // Branch associations
   Branch.belongsTo(Company, { foreignKey: 'companyId', as: 'company' });
   Branch.belongsTo(Lookup, { foreignKey: 'teamLeaderLookupId', as: 'teamLeaderLookup' });
+  Company.hasMany(Branch, { foreignKey: 'companyId', as: 'branches' });
   
   // Zone associations
   Zone.belongsTo(Branch, { foreignKey: 'branchId', as: 'branch' });
+  Branch.hasMany(Zone, { foreignKey: 'branchId', as: 'zones' });
   
   // MaintenanceService associations
   MaintenanceService.belongsTo(Company, { foreignKey: 'companyId', as: 'company' });
   MaintenanceService.belongsTo(MainService, { foreignKey: 'mainServiceId', as: 'mainService' });
   MaintenanceService.belongsTo(SubService, { foreignKey: 'subServiceId', as: 'subService' });
+  Company.hasMany(MaintenanceService, { foreignKey: 'companyId', as: 'maintenanceServices' });
   
   // SubService associations
   SubService.belongsTo(MainService, { foreignKey: 'mainServiceId', as: 'mainService' });
+
+  // User associations
+  User.belongsTo(Company, { foreignKey: 'companyId', as: 'company' });
+  Company.hasMany(User, { foreignKey: 'companyId', as: 'users' });
   
   // Lookup self-reference for hierarchical relationships
   Lookup.belongsTo(Lookup, { foreignKey: 'parentLookupId', as: 'parent' });
