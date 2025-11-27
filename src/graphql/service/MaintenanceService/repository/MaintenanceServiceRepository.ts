@@ -1,8 +1,7 @@
 import { ApolloError } from 'apollo-server-express';
 import { MaintenanceService } from '../../../../db/models/maintenance-service.model';
 import { Company } from '../../../../db/models/company.model';
-import { MainService } from '../../../../db/models/main-service.model';
-import { SubService } from '../../../../db/models/sub-service.model';
+import { Lookup } from '../../../../db/models/lookup.model';
 import { CreateMaintenanceServiceInput } from '../typedefs/MaintenanceService/inputs/CreateMaintenanceServiceInput.schema';
 import { MaintenanceServiceOrm } from './orm/MaintenanceServiceOrm';
 
@@ -39,8 +38,8 @@ class MaintenanceServiceRepository {
       const service = await MaintenanceService.findOne({
         include: [
           { model: Company, as: 'company' },
-          { model: MainService, as: 'mainService' },
-          { model: SubService, as: 'subService' },
+          { model: Lookup, as: 'mainService' },
+          { model: Lookup, as: 'subService' },
         ],
         where: { id },
       });
@@ -55,8 +54,8 @@ class MaintenanceServiceRepository {
       const services = await MaintenanceService.findAll({
         include: [
           { model: Company, as: 'company' },
-          { model: MainService, as: 'mainService' },
-          { model: SubService, as: 'subService' },
+          { model: Lookup, as: 'mainService' },
+          { model: Lookup, as: 'subService' },
         ],
         where: { companyId },
         order: [['createdAt', 'DESC']],

@@ -39,7 +39,7 @@ const seedLookups = async () => {
     console.log(`  - ${LOOKUP_DATA.filter((l) => l.category === 'Country').length} Countries`);
     console.log(`  - ${LOOKUP_DATA.filter((l) => l.category === 'EstablishedType').length} Established Types`);
     console.log(`  - ${LOOKUP_DATA.filter((l) => l.category === 'UserRole').length} User Roles`);
-    console.log(`  - ${LOOKUP_DATA.filter((l) => l.category === 'TeamLeader').length} Team Leaders`);
+    // Team Leaders removed - now using USER_ROLE with code 'TEAMLEADER'
   } catch (error) {
     console.error('Error seeding lookups:', error);
     throw error;

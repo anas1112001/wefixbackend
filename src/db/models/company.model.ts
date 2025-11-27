@@ -1,8 +1,9 @@
 import { DataTypes, UUIDV4 } from 'sequelize';
 import { BelongsTo, Column, CreatedAt, ForeignKey, Model, Table, UpdatedAt } from 'sequelize-typescript';
 import { getDate, getIsoTimestamp, setDate, toLowerCase } from '../../lib';
-import { CompanyStatus, EstablishedType } from '../../graphql/service/Company/typedefs/Company/enums/Company.enums';
+import { CompanyStatus } from '../../graphql/service/Company/typedefs/Company/enums/Company.enums';
 import { Lookup } from './lookup.model';
+import { User } from './user.model';
 
 @Table({
   modelName: 'Company',
@@ -54,23 +55,6 @@ export class Company extends Model {
   @BelongsTo(() => Lookup, { foreignKey: 'countryLookupId', as: 'countryLookup' })
   public countryLookup: Lookup;
 
-  @ForeignKey(() => Lookup)
-  @Column({
-    allowNull: true,
-    type: DataTypes.UUID,
-  })
-  public establishedTypeLookupId: string | null;
-
-  @BelongsTo(() => Lookup, { foreignKey: 'establishedTypeLookupId', as: 'establishedTypeLookup' })
-  public establishedTypeLookup: Lookup;
-
-  @Column({
-    allowNull: false,
-    defaultValue: EstablishedType.LLC,
-    type: DataTypes.ENUM({ values: Object.values(EstablishedType) }),
-  })
-  public establishedType: EstablishedType;
-
   @Column({
     allowNull: true,
     type: DataTypes.TEXT,
@@ -84,18 +68,18 @@ export class Company extends Model {
   public hoLocation: string | null;
 
   @Column({
+    allowNull: true,
+    type: DataTypes.STRING(10),
+    unique: true,
+  })
+  public ticketShortCode: string | null;
+
+  @Column({
     allowNull: false,
     defaultValue: CompanyStatus.ACTIVE,
     type: DataTypes.ENUM({ values: Object.values(CompanyStatus) }),
   })
   public isActive: CompanyStatus;
-
-  @Column({
-    allowNull: false,
-    defaultValue: 0,
-    type: DataTypes.INTEGER,
-  })
-  public numberOfBranches: number;
 
   @Column({
     allowNull: true,
@@ -124,5 +108,64 @@ export class Company extends Model {
     type: DataTypes.DATE,
   })
   public updatedAt: Date;
+
+  @ForeignKey(() => User)
+  @Column({
+    allowNull: true,
+    comment: 'User who created this record',
+    type: DataTypes.UUID,
+  })
+  public createdBy: string | null;
+
+  @BelongsTo(() => User, { foreignKey: 'createdBy', as: 'creator' })
+  public creator?: User | null;
+
+  @ForeignKey(() => User)
+  @Column({
+    allowNull: true,
+    comment: 'User who last updated this record',
+    type: DataTypes.UUID,
+  })
+  public updatedBy: string | null;
+
+  @BelongsTo(() => User, { foreignKey: 'updatedBy', as: 'updater' })
+  public updater?: User | null;
+
+  @Column({
+    allowNull: true,
+    comment: 'DateTime when record was deleted',
+    get: getDate('deletedAt'),
+    set: setDate('deletedAt'),
+    type: DataTypes.DATE,
+  })
+  public deletedAt: Date | null;
+
+  @ForeignKey(() => User)
+  @Column({
+    allowNull: true,
+    comment: 'User who deleted this record',
+    type: DataTypes.UUID,
+  })
+  public deletedBy: string | null;
+
+  @BelongsTo(() => User, { foreignKey: 'deletedBy', as: 'deleter' })
+  public deleter?: User | null;
+
+  @Column({
+    allowNull: false,
+    comment: 'Whether the record is active (auditing)',
+    defaultValue: true,
+    field: 'is_active_audit',
+    type: DataTypes.BOOLEAN,
+  })
+  public isActiveAudit: boolean;
+
+  @Column({
+    allowNull: false,
+    comment: 'Whether the record is deleted (soft delete)',
+    defaultValue: false,
+    type: DataTypes.BOOLEAN,
+  })
+  public isDeleted: boolean;
 }
 

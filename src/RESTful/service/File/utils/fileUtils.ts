@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import { getDestinationPath, FileCategory, ensureDirectoryExists } from '../../../utils/filePathHelper';
 
 const checkAllChunksReceived = (filename, totalChunks) => {
   console.debug(`Checking all chunks received for ${filename}. Total chunks expected: ${totalChunks}`);
@@ -24,9 +25,14 @@ const checkAllChunksReceived = (filename, totalChunks) => {
   }
 };
 
-const destination = path.join(__dirname, '..', '..', '..', '..','..', 'public/files');
-
-const reassembleFile = async (filename, totalChunks, finalDir) => {
+const reassembleFile = async (filename, totalChunks, finalDir, category?: FileCategory) => {
+  // Determine destination based on category, default to CONTRACT
+  const fileCategory = category || FileCategory.CONTRACT;
+  const destination = getDestinationPath(fileCategory);
+  
+  // Ensure destination directory exists
+  ensureDirectoryExists(destination);
+  
   const finalFilePath = path.join(destination, filename);
   try {
     const writeStream = fs.createWriteStream(finalFilePath, { encoding: 'binary', flags: 'w' });
@@ -46,11 +52,21 @@ const reassembleFile = async (filename, totalChunks, finalDir) => {
   }
 };
 
-const getPublicFileUrl = (filePath) => {
+const getPublicFileUrl = (filePath, category?: FileCategory) => {
   const fileName = path.basename(filePath);
+  const fileCategory = category || FileCategory.CONTRACT;
   const host = process.env.HOST;
   const port = process.env.SERVER_PORT || 4000;
-  return `${host}:${port}/files/${fileName}`;
+  
+  // Determine URL path based on category
+  let urlPath = '';
+  if (fileCategory === FileCategory.IMAGE) {
+    urlPath = `/WeFixFiles/Images/${fileName}`;
+  } else {
+    urlPath = `/WeFixFiles/Contracts/${fileName}`;
+  }
+  
+  return `${host}:${port}${urlPath}`;
 };
 
 export { checkAllChunksReceived, reassembleFile, getPublicFileUrl };

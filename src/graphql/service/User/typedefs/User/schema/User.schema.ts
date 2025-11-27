@@ -1,7 +1,7 @@
 import { Field, ID, ObjectType } from 'type-graphql'
 
-import {  UserRoles } from '../enums/User.enums'
 import { Company } from '../../../../Company/typedefs/Company/schema/Company.schema'
+import { LookupType } from '../../../../Lookup/typedefs/Lookup/schema/Lookup.schema'
 
 @ObjectType({
   description: 'Resoponse for the user item',
@@ -28,8 +28,8 @@ export class User {
   @Field((_type) => String!)
   public password: string
 
-  @Field((_type) => UserRoles!)
-  public userRole: UserRoles
+  @Field(() => LookupType, { nullable: true })
+  public userRole?: LookupType
 
   @Field({ nullable: true })
   public companyId?: string | null

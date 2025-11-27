@@ -43,13 +43,12 @@ type Company {
   companyNameEnglish: String
   countryLookup: LookupType
   createdAt: DateTime!
-  establishedTypeLookup: LookupType
   hoAddress: String
   hoLocation: String
   id: ID!
   isActive: CompanyStatus!
   logo: String
-  numberOfBranches: Float!
+  ticketShortCode: String
   title: String!
   updatedAt: DateTime!
 }
@@ -60,7 +59,6 @@ input CompanyFilterInput {
   page: Float = 1
   search: String
   status: CompanyStatus
-  type: String
 }
 
 """Company status types"""
@@ -134,12 +132,11 @@ input CreateCompanyInput {
   companyNameArabic: String
   companyNameEnglish: String
   countryLookupId: String
-  establishedTypeLookupId: String
   hoAddress: String
   hoLocation: String
   isActive: CompanyStatus
   logo: String
-  numberOfBranches: Float = 0
+  ticketShortCode: String
   title: String!
 }
 
@@ -199,7 +196,7 @@ input CreateUserInput {
   lastName: String!
   password: String!
   userNumber: String!
-  userRole: UserRoles!
+  userRoleId: String!
 }
 
 """Response data for updating a user"""
@@ -304,9 +301,10 @@ enum LookupCategory {
   BUSINESS_MODEL
   COUNTRY
   ESTABLISHED_TYPE
+  MAIN_SERVICE
   MANAGED_BY
   STATE
-  TEAM_LEADER
+  SUB_SERVICE
   USER_ROLE
 }
 
@@ -582,12 +580,11 @@ input UpdateCompanyInput {
   companyNameArabic: String
   companyNameEnglish: String
   countryLookupId: String
-  establishedTypeLookupId: String
   hoAddress: String
   hoLocation: String
   isActive: CompanyStatus
   logo: String
-  numberOfBranches: Float
+  ticketShortCode: String
   title: String
 }
 
@@ -649,7 +646,7 @@ type User {
   password: String!
   updatedAt: DateTime!
   userNumber: String!
-  userRole: UserRoles!
+  userRole: LookupType
 }
 
 """UserRole lookup table"""
@@ -661,13 +658,6 @@ type UserRoleType {
   name: String!
   nameArabic: String
   updatedAt: DateTime!
-}
-
-"""User role types"""
-enum UserRoles {
-  COMPANY
-  INDIVIDUAL
-  SUPER_ADMIN
 }
 
 """Zone entity"""

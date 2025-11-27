@@ -42,8 +42,9 @@ export class Server {
   private async startGraphql() {
     const schema = await generateSchema('targetSchema.graphql')
     const server = new ApolloServer({ 
-      context: async (req, res) => await createContext(req, res), 
+      context: async ({ req, res }) => await createContext(req, res), 
       schema,
+      introspection: true, // Enable GraphQL introspection for testing
     })
     await server.start()
     server.applyMiddleware({ 
@@ -60,6 +61,8 @@ export class Server {
     
     // Add default origins if not in env
     const defaultOrigins = [
+      'http://localhost',
+      'http://localhost:80',
       'http://localhost:3000',
       'http://localhost:3001',
     ];
@@ -69,16 +72,17 @@ export class Server {
 
   private listen() {
     const isDevelopment = process.env.NODE_ENV !== 'production'
+    const hasCertificates = fs.existsSync('domain.crt') && fs.existsSync('domain.key')
     
-    if (isDevelopment) {
-      // Use HTTP for development
+    if (isDevelopment || !hasCertificates) {
+      // Use HTTP for development or if certificates are missing
       this.app.listen(this.port, (): void => {
         console.log('--------------------------------------------------------------')
         console.log(`🚀GraphQL-Server is running on http://localhost:${this.port}/graphql`);
         console.log('--------------------------------------------------------------')
       });
     } else {
-      // Use HTTPS for production
+      // Use HTTPS for production when certificates are available
       const httpsOptions = {
         cert: fs.readFileSync('domain.crt'),
         key: fs.readFileSync('domain.key')

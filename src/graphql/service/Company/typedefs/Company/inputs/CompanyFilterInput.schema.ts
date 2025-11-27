@@ -7,9 +7,6 @@ export class CompanyFilterInput {
   status?: CompanyStatus;
 
   @Field({ nullable: true })
-  type?: string;
-
-  @Field({ nullable: true })
   search?: string;
 
   @Field((_type) => Number, { defaultValue: 1 })

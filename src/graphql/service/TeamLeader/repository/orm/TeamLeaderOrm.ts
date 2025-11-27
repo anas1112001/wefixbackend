@@ -1,12 +1,12 @@
-import { TeamLeader } from '../../../../../db/models/team-leader.model';
+import { Lookup } from '../../../../../db/models/lookup.model';
 
 export class TeamLeaderOrm {
-  public async findAll(options?: any): Promise<TeamLeader[]> {
-    return TeamLeader.findAll(options);
+  public async findAll(options?: any): Promise<Lookup[]> {
+    return Lookup.findAll(options);
   }
 
-  public async findByPk(id: string): Promise<TeamLeader | null> {
-    return TeamLeader.findByPk(id);
+  public async findByPk(id: string): Promise<Lookup | null> {
+    return Lookup.findByPk(id);
   }
 }
 

@@ -19,7 +19,7 @@ export const COUNTRIES: readonly LookupData[] = [
     category: LookupCategory.COUNTRY,
     code: 'JO',
     description: null,
-    id: 'a1b2c3d4-e5f6-4789-a012-345678901234',
+    id: 'aa11bb22-cc33-dd44-ee55-ff6677889900', // Updated to avoid conflict with MainService
     isActive: true,
     isDefault: true,
     name: 'Jordan',
@@ -31,7 +31,7 @@ export const COUNTRIES: readonly LookupData[] = [
     category: LookupCategory.COUNTRY,
     code: 'SA',
     description: null,
-    id: 'b2c3d4e5-f6a7-4890-b123-456789012345',
+    id: 'bb22cc33-dd44-ee55-ff66-778899001122', // Updated to avoid conflict with MainService
     isActive: true,
     isDefault: false,
     name: 'Saudi Arabia',
@@ -43,7 +43,7 @@ export const COUNTRIES: readonly LookupData[] = [
     category: LookupCategory.COUNTRY,
     code: 'AE',
     description: null,
-    id: 'c3d4e5f6-a7b8-4901-c234-567890123456',
+    id: 'cc33dd44-ee55-ff66-7788-990011223344', // Updated to avoid conflict with MainService
     isActive: true,
     isDefault: false,
     name: 'United Arab Emirates',
@@ -55,7 +55,7 @@ export const COUNTRIES: readonly LookupData[] = [
     category: LookupCategory.COUNTRY,
     code: 'KW',
     description: null,
-    id: 'd4e5f6a7-b8c9-4012-d345-678901234567',
+    id: 'dd44ee55-ff66-7788-9900-112233445566', // Updated to avoid conflict with MainService
     isActive: true,
     isDefault: false,
     name: 'Kuwait',
@@ -115,6 +115,7 @@ export const COUNTRIES: readonly LookupData[] = [
 
 // Established Types
 export const ESTABLISHED_TYPES: readonly LookupData[] = [
+  // Business Types (Existing)
   {
     category: LookupCategory.ESTABLISHED_TYPE,
     code: null,
@@ -163,6 +164,67 @@ export const ESTABLISHED_TYPES: readonly LookupData[] = [
     orderId: 4,
     parentLookupId: null,
   },
+  // Facility Types (New)
+  {
+    category: LookupCategory.ESTABLISHED_TYPE,
+    code: null,
+    description: 'Schools',
+    id: 'a1b2c3d4-e5f6-4789-a012-345678901234',
+    isActive: true,
+    isDefault: false,
+    name: 'Schools',
+    nameArabic: 'مدارس',
+    orderId: 5,
+    parentLookupId: null,
+  },
+  {
+    category: LookupCategory.ESTABLISHED_TYPE,
+    code: null,
+    description: 'Hospitals',
+    id: 'b2c3d4e5-f6a7-4890-b123-456789012345',
+    isActive: true,
+    isDefault: false,
+    name: 'Hospitals',
+    nameArabic: 'مستشفيات',
+    orderId: 6,
+    parentLookupId: null,
+  },
+  {
+    category: LookupCategory.ESTABLISHED_TYPE,
+    code: null,
+    description: 'Commercial Complex',
+    id: 'c3d4e5f6-a7b8-4901-c234-567890123456',
+    isActive: true,
+    isDefault: false,
+    name: 'Commercial Complex',
+    nameArabic: 'مجمع تجاري',
+    orderId: 7,
+    parentLookupId: null,
+  },
+  {
+    category: LookupCategory.ESTABLISHED_TYPE,
+    code: null,
+    description: 'Residential Complex',
+    id: 'd4e5f6a7-b8c9-4012-d345-678901234567',
+    isActive: true,
+    isDefault: false,
+    name: 'Residential Complex',
+    nameArabic: 'مجمع سكني',
+    orderId: 8,
+    parentLookupId: null,
+  },
+  {
+    category: LookupCategory.ESTABLISHED_TYPE,
+    code: null,
+    description: 'Other',
+    id: 'e5f6a7b8-c9d0-4123-e456-789012345678',
+    isActive: true,
+    isDefault: false,
+    name: 'Other',
+    nameArabic: 'أخرى',
+    orderId: 9,
+    parentLookupId: null,
+  },
 ];
 
 // User Roles
@@ -193,7 +255,7 @@ export const USER_ROLES: readonly LookupData[] = [
   },
   {
     category: LookupCategory.USER_ROLE,
-    code: null,
+    code: 'TEAMLEADER',
     description: 'Team leader responsible for team management',
     id: 'c5d6e7f8-a9b0-4123-c456-789012345678',
     isActive: true,
@@ -241,45 +303,7 @@ export const USER_ROLES: readonly LookupData[] = [
   },
 ];
 
-// Team Leaders
-export const TEAM_LEADERS: readonly LookupData[] = [
-  {
-    category: LookupCategory.TEAM_LEADER,
-    code: null,
-    description: 'Senior team leader with extensive experience',
-    id: 'a9b0c1d2-e3f4-4567-a890-123456789012',
-    isActive: true,
-    isDefault: true,
-    name: 'Senior Team Leader',
-    nameArabic: 'قائد فريق أول',
-    orderId: 1,
-    parentLookupId: null,
-  },
-  {
-    category: LookupCategory.TEAM_LEADER,
-    code: null,
-    description: 'Standard team leader',
-    id: 'b0c1d2e3-f4a5-4678-b901-234567890123',
-    isActive: true,
-    isDefault: false,
-    name: 'Team Leader',
-    nameArabic: 'قائد فريق',
-    orderId: 2,
-    parentLookupId: null,
-  },
-  {
-    category: LookupCategory.TEAM_LEADER,
-    code: null,
-    description: 'Junior team leader',
-    id: 'c1d2e3f4-a5b6-4789-c012-345678901234',
-    isActive: true,
-    isDefault: false,
-    name: 'Junior Team Leader',
-    nameArabic: 'قائد فريق مبتدئ',
-    orderId: 3,
-    parentLookupId: null,
-  },
-];
+// Team Leaders - REMOVED: Now using USER_ROLE with code 'TEAMLEADER' instead
 
 // Business Models
 export const BUSINESS_MODELS: readonly LookupData[] = [
@@ -338,8 +362,8 @@ export const MANAGED_BY: readonly LookupData[] = [
 ];
 
 // Main Services
-// Main services and sub services have been moved to separate tables
-// See mainServicesSeed.ts and subServicesSeed.ts
+// Main services have been moved to lookups table with category 'MainService'
+// See subServicesSeed.ts for sub services
 
 // Combined lookup data
 export const STATES: readonly LookupData[] = [
@@ -353,7 +377,7 @@ export const STATES: readonly LookupData[] = [
     name: 'Amman',
     nameArabic: 'عمان',
     orderId: 1,
-    parentLookupId: 'a1b2c3d4-e5f6-4789-a012-345678901234',
+    parentLookupId: 'aa11bb22-cc33-dd44-ee55-ff6677889900', // Updated to new Jordan ID
   },
   {
     category: LookupCategory.STATE,
@@ -365,7 +389,7 @@ export const STATES: readonly LookupData[] = [
     name: 'Irbid',
     nameArabic: 'إربد',
     orderId: 2,
-    parentLookupId: 'a1b2c3d4-e5f6-4789-a012-345678901234',
+    parentLookupId: 'aa11bb22-cc33-dd44-ee55-ff6677889900', // Updated to new Jordan ID
   },
   {
     category: LookupCategory.STATE,
@@ -377,7 +401,7 @@ export const STATES: readonly LookupData[] = [
     name: 'Zarqa',
     nameArabic: 'الزرقاء',
     orderId: 3,
-    parentLookupId: 'a1b2c3d4-e5f6-4789-a012-345678901234',
+    parentLookupId: 'aa11bb22-cc33-dd44-ee55-ff6677889900', // Updated to new Jordan ID
   },
   {
     category: LookupCategory.STATE,
@@ -389,7 +413,7 @@ export const STATES: readonly LookupData[] = [
     name: 'Aqaba',
     nameArabic: 'العقبة',
     orderId: 4,
-    parentLookupId: 'a1b2c3d4-e5f6-4789-a012-345678901234',
+    parentLookupId: 'aa11bb22-cc33-dd44-ee55-ff6677889900', // Updated to new Jordan ID
   },
   {
     category: LookupCategory.STATE,
@@ -401,7 +425,7 @@ export const STATES: readonly LookupData[] = [
     name: 'Balqa',
     nameArabic: 'البلقاء',
     orderId: 5,
-    parentLookupId: 'a1b2c3d4-e5f6-4789-a012-345678901234',
+    parentLookupId: 'aa11bb22-cc33-dd44-ee55-ff6677889900', // Updated to new Jordan ID
   },
   {
     category: LookupCategory.STATE,
@@ -413,7 +437,7 @@ export const STATES: readonly LookupData[] = [
     name: 'Mafraq',
     nameArabic: 'المفرق',
     orderId: 6,
-    parentLookupId: 'a1b2c3d4-e5f6-4789-a012-345678901234',
+    parentLookupId: 'aa11bb22-cc33-dd44-ee55-ff6677889900', // Updated to new Jordan ID
   },
   {
     category: LookupCategory.STATE,
@@ -425,7 +449,7 @@ export const STATES: readonly LookupData[] = [
     name: 'Madaba',
     nameArabic: 'مادبا',
     orderId: 7,
-    parentLookupId: 'a1b2c3d4-e5f6-4789-a012-345678901234',
+    parentLookupId: 'aa11bb22-cc33-dd44-ee55-ff6677889900', // Updated to new Jordan ID
   },
   {
     category: LookupCategory.STATE,
@@ -437,7 +461,7 @@ export const STATES: readonly LookupData[] = [
     name: 'Jerash',
     nameArabic: 'جرش',
     orderId: 8,
-    parentLookupId: 'a1b2c3d4-e5f6-4789-a012-345678901234',
+    parentLookupId: 'aa11bb22-cc33-dd44-ee55-ff6677889900', // Updated to new Jordan ID
   },
   {
     category: LookupCategory.STATE,
@@ -449,7 +473,7 @@ export const STATES: readonly LookupData[] = [
     name: 'Ajloun',
     nameArabic: 'عجلون',
     orderId: 9,
-    parentLookupId: 'a1b2c3d4-e5f6-4789-a012-345678901234',
+    parentLookupId: 'aa11bb22-cc33-dd44-ee55-ff6677889900', // Updated to new Jordan ID
   },
   {
     category: LookupCategory.STATE,
@@ -461,7 +485,7 @@ export const STATES: readonly LookupData[] = [
     name: 'Karak',
     nameArabic: 'الكرك',
     orderId: 10,
-    parentLookupId: 'a1b2c3d4-e5f6-4789-a012-345678901234',
+    parentLookupId: 'aa11bb22-cc33-dd44-ee55-ff6677889900', // Updated to new Jordan ID
   },
   {
     category: LookupCategory.STATE,
@@ -473,7 +497,7 @@ export const STATES: readonly LookupData[] = [
     name: 'Tafilah',
     nameArabic: 'الطفيلة',
     orderId: 11,
-    parentLookupId: 'a1b2c3d4-e5f6-4789-a012-345678901234',
+    parentLookupId: 'aa11bb22-cc33-dd44-ee55-ff6677889900', // Updated to new Jordan ID
   },
   {
     category: LookupCategory.STATE,
@@ -485,7 +509,7 @@ export const STATES: readonly LookupData[] = [
     name: "Ma'an",
     nameArabic: 'معان',
     orderId: 12,
-    parentLookupId: 'a1b2c3d4-e5f6-4789-a012-345678901234',
+    parentLookupId: 'aa11bb22-cc33-dd44-ee55-ff6677889900', // Updated to new Jordan ID
   },
 ];
 
@@ -495,7 +519,6 @@ export const LOOKUP_DATA: readonly LookupData[] = [
   ...STATES,
   ...ESTABLISHED_TYPES,
   ...MANAGED_BY,
-  ...TEAM_LEADERS,
   ...USER_ROLES,
 ];
 

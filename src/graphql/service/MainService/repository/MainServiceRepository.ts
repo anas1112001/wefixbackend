@@ -1,5 +1,5 @@
 import { ApolloError } from 'apollo-server-express';
-import { MainService } from '../../../../db/models/main-service.model';
+import { Lookup, LookupCategory } from '../../../../db/models/lookup.model';
 import { MainServiceOrm } from './orm/MainServiceOrm';
 
 class MainServiceRepository {
@@ -15,10 +15,11 @@ class MainServiceRepository {
 
   private async _getAllMainServices(): Promise<MainServiceOrm[]> {
     try {
-      const services = await MainService.findAll({
+      const services = await Lookup.findAll({
+        where: { category: LookupCategory.MAIN_SERVICE },
         order: [['orderId', 'ASC'], ['name', 'ASC']],
       });
-      return services;
+      return services as any;
     } catch (error) {
       throw new ApolloError(`Failed to get main services: ${error.message}`, 'MAIN_SERVICES_RETRIEVAL_FAILED');
     }
@@ -26,8 +27,10 @@ class MainServiceRepository {
 
   private async _getMainServiceById(id: string): Promise<MainServiceOrm | null> {
     try {
-      const service = await MainService.findByPk(id);
-      return service;
+      const service = await Lookup.findOne({
+        where: { id, category: LookupCategory.MAIN_SERVICE },
+      });
+      return service as any;
     } catch (error) {
       throw new ApolloError(`Failed to get main service: ${error.message}`, 'MAIN_SERVICE_RETRIEVAL_FAILED');
     }
@@ -35,11 +38,11 @@ class MainServiceRepository {
 
   private async _getActiveMainServices(): Promise<MainServiceOrm[]> {
     try {
-      const services = await MainService.findAll({
-        where: { isActive: true },
+      const services = await Lookup.findAll({
+        where: { category: LookupCategory.MAIN_SERVICE, isActive: true },
         order: [['orderId', 'ASC'], ['name', 'ASC']],
       });
-      return services;
+      return services as any;
     } catch (error) {
       throw new ApolloError(`Failed to get active main services: ${error.message}`, 'ACTIVE_MAIN_SERVICES_RETRIEVAL_FAILED');
     }

@@ -13,7 +13,7 @@ class FileService {
     }
 
     async processChunk(file, chunkInfo) {
-        const { chunkIndex, filename, totalChunks } = chunkInfo;
+        const { chunkIndex, filename, totalChunks, category } = chunkInfo;
 
         const desiredTempFilePath = path.join(tempDir, `${filename}.part${chunkIndex}`);
 
@@ -31,7 +31,7 @@ class FileService {
             if (fileUtils.checkAllChunksReceived(filename, totalChunks)) {
                 try {
                     console.debug(`All chunks received for ${filename}, starting reassembly`);
-                    const finalFilePath = await fileUtils.reassembleFile(filename, totalChunks, tempDir);
+                    const finalFilePath = await fileUtils.reassembleFile(filename, totalChunks, tempDir, category);
                     this.storeFileReference(filename, finalFilePath);
                     // Removed the line that deletes the reference
                 } catch (error) {

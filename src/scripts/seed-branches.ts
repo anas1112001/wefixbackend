@@ -17,9 +17,9 @@ const seedBranches = async () => {
       return;
     }
 
-    // Get team leader lookups
-    const teamLeaders = await Lookup.findAll({
-      where: { category: LookupCategory.TEAM_LEADER, isActive: true },
+    // Get team leader lookup (USER_ROLE with code 'TEAMLEADER')
+    const teamLeader = await Lookup.findOne({
+      where: { category: LookupCategory.USER_ROLE, code: 'TEAMLEADER', isActive: true },
     });
 
     // Check if branches already exist
@@ -35,7 +35,6 @@ const seedBranches = async () => {
     for (let i = 0; i < BRANCHES_DATA.length; i++) {
       const branchData = BRANCHES_DATA[i];
       const company = companies[i % companies.length];
-      const teamLeader = teamLeaders.length > 0 ? teamLeaders[i % teamLeaders.length] : null;
 
       await Branch.create({
         branchTitle: branchData.branchTitle,
@@ -45,7 +44,7 @@ const seedBranches = async () => {
         representativeMobileNumber: branchData.representativeMobileNumber,
         representativeEmailAddress: branchData.representativeEmailAddress,
         companyId: company.id,
-        teamLeaderLookupId: teamLeader?.id || null,
+        teamLeaderLookupId: teamLeader?.id || null, // Use USER_ROLE with code 'TEAMLEADER'
         isActive: branchData.isActive,
       } as any);
 

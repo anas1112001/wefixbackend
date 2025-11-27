@@ -15,6 +15,8 @@
     "migrate:status": "tsc && node dist/migrator.js status",
     "migrate:clean": "rm -f src/db/migrations/*.ts dist/db/migrations/*.js",
     "seed:lookups": "tsc && node dist/scripts/seed-lookups.js",
+    "seed:additional-established-types": "tsc && node dist/scripts/seed-additional-established-types.js",
+    "add:other-established-type": "tsc && node dist/scripts/add-other-established-type.js",
     "seed:main-services": "ts-node -r tsconfig-paths/register src/scripts/seed-main-services.ts",
     "seed:sub-services": "ts-node -r tsconfig-paths/register src/scripts/seed-sub-services.ts",
     "seed:companies": "tsc && node dist/scripts/seed-companies.js",

@@ -4,15 +4,13 @@ export interface CompanySeedData {
   companyNameArabic: string | null;
   companyNameEnglish: string | null;
   countryLookupId: string | null; // Will be set dynamically from COUNTRY lookups
-  establishedTypeLookupId: string | null; // Will be set dynamically from ESTABLISHED_TYPE lookups
   hoAddress: string | null;
   hoLocation: string | null;
   isActive: boolean;
-  numberOfBranches: number;
   logo: string | null;
 }
 
-export const COMPANIES_DATA: readonly Omit<CompanySeedData, 'countryLookupId' | 'establishedTypeLookupId'>[] = [
+export const COMPANIES_DATA: readonly Omit<CompanySeedData, 'countryLookupId'>[] = [
   {
     companyId: 'COMP001',
     title: 'Gamma Solutions',
@@ -21,7 +19,6 @@ export const COMPANIES_DATA: readonly Omit<CompanySeedData, 'countryLookupId' | 
     hoAddress: '123 Business Street, Amman',
     hoLocation: 'Amman, Jordan',
     isActive: true,
-    numberOfBranches: 3,
     logo: null,
   },
   {
@@ -32,7 +29,6 @@ export const COMPANIES_DATA: readonly Omit<CompanySeedData, 'countryLookupId' | 
     hoAddress: '456 Corporate Avenue, Dubai',
     hoLocation: 'Dubai, UAE',
     isActive: true,
-    numberOfBranches: 5,
     logo: null,
   },
   {
@@ -43,7 +39,6 @@ export const COMPANIES_DATA: readonly Omit<CompanySeedData, 'countryLookupId' | 
     hoAddress: '789 Industrial Road, Riyadh',
     hoLocation: 'Riyadh, Saudi Arabia',
     isActive: true,
-    numberOfBranches: 2,
     logo: null,
   },
   {
@@ -54,7 +49,6 @@ export const COMPANIES_DATA: readonly Omit<CompanySeedData, 'countryLookupId' | 
     hoAddress: '321 Tech Park, Cairo',
     hoLocation: 'Cairo, Egypt',
     isActive: true,
-    numberOfBranches: 4,
     logo: null,
   },
   {
@@ -65,7 +59,6 @@ export const COMPANIES_DATA: readonly Omit<CompanySeedData, 'countryLookupId' | 
     hoAddress: '654 Service Boulevard, Doha',
     hoLocation: 'Doha, Qatar',
     isActive: true,
-    numberOfBranches: 1,
     logo: null,
   },
   {
@@ -76,7 +69,6 @@ export const COMPANIES_DATA: readonly Omit<CompanySeedData, 'countryLookupId' | 
     hoAddress: '987 Group Plaza, Kuwait City',
     hoLocation: 'Kuwait City, Kuwait',
     isActive: true,
-    numberOfBranches: 6,
     logo: null,
   },
   {
@@ -87,7 +79,6 @@ export const COMPANIES_DATA: readonly Omit<CompanySeedData, 'countryLookupId' | 
     hoAddress: '147 Enterprise Way, Beirut',
     hoLocation: 'Beirut, Lebanon',
     isActive: false,
-    numberOfBranches: 2,
     logo: null,
   },
   {
@@ -98,7 +89,6 @@ export const COMPANIES_DATA: readonly Omit<CompanySeedData, 'countryLookupId' | 
     hoAddress: '258 Corporate Center, Muscat',
     hoLocation: 'Muscat, Oman',
     isActive: true,
-    numberOfBranches: 3,
     logo: null,
   },
   {
@@ -109,7 +99,6 @@ export const COMPANIES_DATA: readonly Omit<CompanySeedData, 'countryLookupId' | 
     hoAddress: '369 Systems Drive, Manama',
     hoLocation: 'Manama, Bahrain',
     isActive: true,
-    numberOfBranches: 2,
     logo: null,
   },
   {
@@ -120,7 +109,6 @@ export const COMPANIES_DATA: readonly Omit<CompanySeedData, 'countryLookupId' | 
     hoAddress: '741 Holdings Tower, Abu Dhabi',
     hoLocation: 'Abu Dhabi, UAE',
     isActive: true,
-    numberOfBranches: 7,
     logo: null,
   },
 ];

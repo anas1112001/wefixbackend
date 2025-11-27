@@ -31,13 +31,6 @@ class BranchRepository {
         teamLeaderLookupId: branchData.teamLeaderLookupId || null,
         isActive: branchData.isActive !== undefined ? branchData.isActive : true,
       } as any);
-
-      if (branchData.companyId) {
-        await Company.increment('numberOfBranches', {
-          by: 1,
-          where: { id: branchData.companyId },
-        });
-      }
       
       return await this._getBranchById(newBranch.id) || newBranch;
     } catch (error) {
@@ -88,13 +81,6 @@ class BranchRepository {
       }
 
       const deleted = await Branch.destroy({ where: { id } });
-
-      if (deleted > 0 && branch.companyId) {
-        await Company.increment('numberOfBranches', {
-          by: -1,
-          where: { id: branch.companyId },
-        });
-      }
 
       return deleted > 0;
     } catch (error) {

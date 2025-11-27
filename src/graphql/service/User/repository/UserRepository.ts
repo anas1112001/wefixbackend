@@ -6,6 +6,7 @@ import { FindOptions } from 'sequelize/types';
 import { UserOrm } from './orm/UserOrm';
 
 import { User } from '../../../../db/models/user.model';
+import { Lookup } from '../../../../db/models/lookup.model';
 import { CreateUserInput } from '../typedefs/User/inputs/CreateUserInput.schema';
 import { UpdateUserInput } from '../typedefs/User/inputs/UpdateUserInput.schema';
 
@@ -36,7 +37,10 @@ class UserRepository {
   private async _authenticateUser(userEmail: string, password: string, deviceId: string, fcmToken: string): Promise<UserOrm | null> {
     try {
       const email = userEmail.toLocaleLowerCase();
-      const user = await User.findOne({ where: { email } });
+      const user = await User.findOne({ 
+        where: { email },
+        include: [{ model: Lookup, as: 'userRoleLookup', required: false }],
+      });
 
       if (!user || !deviceId || !fcmToken) {
         return null;
@@ -49,6 +53,9 @@ class UserRepository {
 
       // Update the user's deviceId and FCM token
       await user.update({ deviceId, fcmToken });
+      
+      // Reload with associations after update
+      await user.reload({ include: [{ model: Lookup, as: 'userRoleLookup', required: false }] });
 
       return user;
     } catch (error) {
@@ -57,9 +64,12 @@ class UserRepository {
   }
 
 
-  public async _validateRefreshToken(userEmail: string): Promise<User | null> {
+  public async _validateRefreshToken(userEmail: string): Promise<UserOrm | null> {
     try {
-      const user = await User.findOne({ where: { email: userEmail } });
+      const user = await User.findOne({ 
+        where: { email: userEmail },
+        include: [{ model: Lookup, as: 'userRoleLookup', required: false }],
+      });
 
       if (!user) {
         return null;
@@ -73,7 +83,10 @@ class UserRepository {
 
   private async _getUsers(where: FindOptions): Promise<UserOrm[]> {
     try {
-      const users = await User.findAll(where);
+      const users = await User.findAll({
+        ...where,
+        include: [{ model: Lookup, as: 'userRoleLookup', required: false }],
+      });
       return users;
     } catch (error) {
       throw new ApolloError(`Failed to retrieve users: ${error.message}`, 'USER_RETRIEVAL_FAILED');
@@ -91,7 +104,10 @@ class UserRepository {
 
       const userEmail = decoded.email;
 
-      const user = await User.findOne({ where: { email: userEmail } });
+      const user = await User.findOne({ 
+        where: { email: userEmail },
+        include: [{ model: Lookup, as: 'userRoleLookup', required: false }],
+      });
 
       if (!user) {
         throw new ApolloError('User not found', 'USER_NOT_FOUND');
@@ -106,7 +122,10 @@ class UserRepository {
 
   private async _getUserById(id: string): Promise<UserOrm | null> {
     try {
-      const user = await User.findOne({ where: { id } });
+      const user = await User.findOne({ 
+        where: { id },
+        include: [{ model: Lookup, as: 'userRoleLookup', required: false }],
+      });
       return user;
     } catch (error) {
       throw new ApolloError('Unable to authenticate user', 'AUTHENTICATION_FAILED');
@@ -135,10 +154,11 @@ class UserRepository {
         lastName: userData.lastName,
         password: hashedPassword,
         userNumber: userData.userNumber,
-        userRole: userData.userRole,
+        userRoleId: userData.userRoleId,
       };
 
       const newUser = await User.create(userCreationData);
+      await newUser.reload({ include: [{ model: Lookup, as: 'userRoleLookup', required: false }] });
       return newUser;
     } catch (error) {
       throw new ApolloError(`Failed to create user: ${error.message}`, 'USER_CREATION_FAILED');
@@ -147,7 +167,10 @@ class UserRepository {
 
   private async _updateUserById(id: string, updateData: Partial<UserOrm>): Promise<UserOrm | null> {
     try {
-      const user = await User.findOne({ where: { id } });
+      const user = await User.findOne({ 
+        where: { id },
+        include: [{ model: Lookup, as: 'userRoleLookup', required: false }],
+      });
       if (user) {
         if (updateData.password) {
           const salt = await bcrypt.genSalt(10);
@@ -155,6 +178,7 @@ class UserRepository {
         }
 
         await user.update(updateData);
+        await user.reload({ include: [{ model: Lookup, as: 'userRoleLookup', required: false }] });
         return user;
       }
       return null;
@@ -175,7 +199,10 @@ class UserRepository {
   private async _forgotPassword(username: string, lastFourDigits: string): Promise<{ message: string; success: boolean }> {
     try {
       const email = username.trim().toLowerCase();
-      const user = await User.findOne({ where: { email } });
+      const user = await User.findOne({ 
+        where: { email },
+        include: [{ model: Lookup, as: 'userRoleLookup', required: false }],
+      });
 
       if (!user) {
         return { message: 'User not found', success: false };

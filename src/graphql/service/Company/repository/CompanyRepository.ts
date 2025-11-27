@@ -7,18 +7,18 @@ import { Zone } from '../../../../db/models/zone.model';
 import { Contract } from '../../../../db/models/contract.model';
 import { MaintenanceService } from '../../../../db/models/maintenance-service.model';
 import { User } from '../../../../db/models/user.model';
-import { CompanyStatus, EstablishedType } from '../typedefs/Company/enums/Company.enums';
+import { CompanyStatus } from '../typedefs/Company/enums/Company.enums';
 import { CompanyFilterInput } from '../typedefs/Company/inputs/CompanyFilterInput.schema';
 import { CreateCompanyInput } from '../typedefs/Company/inputs/CreateCompanyInput.schema';
 import { UpdateCompanyInput } from '../typedefs/Company/inputs/UpdateCompanyInput.schema';
 import { CompanyOrm } from './orm/CompanyOrm';
 
 class CompanyRepository {
-  public createCompany: (companyData: CreateCompanyInput) => Promise<CompanyOrm>;
-  public deleteCompanyById: (id: string) => Promise<boolean>;
+  public createCompany: (companyData: CreateCompanyInput, userId?: string | null) => Promise<CompanyOrm>;
+  public deleteCompanyById: (id: string, userId?: string | null) => Promise<boolean>;
   public getCompanyById: (id: string) => Promise<CompanyOrm | null>;
   public getCompanies: (filter: CompanyFilterInput) => Promise<{ companies: CompanyOrm[]; total: number; page: number; limit: number; totalPages: number }>;
-  public updateCompanyById: (id: string, updateData: UpdateCompanyInput) => Promise<CompanyOrm | null>;
+  public updateCompanyById: (id: string, updateData: UpdateCompanyInput, userId?: string | null) => Promise<CompanyOrm | null>;
 
   constructor() {
     this.createCompany = this._createCompany.bind(this);
@@ -28,46 +28,36 @@ class CompanyRepository {
     this.updateCompanyById = this._updateCompanyById.bind(this);
   }
 
-  private async _createCompany(companyData: CreateCompanyInput): Promise<CompanyOrm> {
+  private async _createCompany(companyData: CreateCompanyInput, userId?: string | null): Promise<CompanyOrm> {
     try {
-      // Get established type from lookup if provided
-      let establishedType = EstablishedType.LLC; // Default value
-
-      if (companyData.establishedTypeLookupId) {
-        const lookup = await Lookup.findOne({
-          where: { id: companyData.establishedTypeLookupId },
-        });
-
-        if (lookup) {
-          // Map lookup name to EstablishedType enum
-          const lookupName = lookup.name;
-
-          if (lookupName === 'LLC') {
-            establishedType = EstablishedType.LLC;
-          } else if (lookupName === 'Corporation') {
-            establishedType = EstablishedType.CORPORATION;
-          } else if (lookupName === 'Partnership') {
-            establishedType = EstablishedType.PARTNERSHIP;
-          } else if (lookupName === 'Sole Proprietorship') {
-            establishedType = EstablishedType.SOLE_PROPRIETORSHIP;
-          }
-        }
+      // Validate and truncate ticketShortCode if needed (max 10 characters for database)
+      let ticketShortCode = companyData.ticketShortCode || null;
+      if (ticketShortCode && ticketShortCode.length > 10) {
+        ticketShortCode = ticketShortCode.substring(0, 10);
       }
 
+      if (process.env.NODE_ENV === 'development') {
+        console.log('Creating company with createdBy:', userId);
+      }
+      
       const newCompany = await Company.create({
         companyId: companyData.companyId,
         title: companyData.title,
         companyNameArabic: companyData.companyNameArabic || null,
         companyNameEnglish: companyData.companyNameEnglish || null,
         countryLookupId: companyData.countryLookupId || null,
-        establishedTypeLookupId: companyData.establishedTypeLookupId || null,
-        establishedType,
         hoAddress: companyData.hoAddress || null,
         hoLocation: companyData.hoLocation || null,
+        ticketShortCode: ticketShortCode,
         isActive: companyData.isActive || CompanyStatus.ACTIVE,
         logo: companyData.logo || null,
-        numberOfBranches: companyData.numberOfBranches || 0,
+        createdBy: userId || null,
       } as any);
+
+      if (process.env.NODE_ENV === 'development') {
+        console.log('Company created with createdBy:', newCompany.createdBy);
+      }
+
       return newCompany;
     } catch (error) {
       throw new ApolloError(`Failed to create company: ${error.message}`, 'COMPANY_CREATION_FAILED');
@@ -79,9 +69,11 @@ class CompanyRepository {
       const company = await Company.findOne({
         include: [
           { model: Lookup, as: 'countryLookup' },
-          { model: Lookup, as: 'establishedTypeLookup' },
         ],
-        where: { id },
+        where: { 
+          id,
+          isDeleted: false,
+        },
       });
       return company;
     } catch (error) {
@@ -95,14 +87,12 @@ class CompanyRepository {
       const limit = filter.limit || 10;
       const offset = (page - 1) * limit;
 
-      const where: WhereOptions = {};
+      const where: WhereOptions = {
+        isDeleted: false, // Exclude soft-deleted companies
+      };
 
       if (filter.status) {
         where.isActive = filter.status;
-      }
-
-      if (filter.type) {
-        where.establishedTypeLookupId = filter.type;
       }
 
       if (filter.search) {
@@ -115,7 +105,6 @@ class CompanyRepository {
       const { count, rows } = await Company.findAndCountAll({
         include: [
           { model: Lookup, as: 'countryLookup' },
-          { model: Lookup, as: 'establishedTypeLookup' },
         ],
         limit,
         offset,
@@ -137,11 +126,21 @@ class CompanyRepository {
     }
   }
 
-  private async _updateCompanyById(id: string, updateData: UpdateCompanyInput): Promise<CompanyOrm | null> {
+  private async _updateCompanyById(id: string, updateData: UpdateCompanyInput, userId?: string | null): Promise<CompanyOrm | null> {
     try {
-      const company = await Company.findOne({ where: { id } });
+      const company = await Company.findOne({ where: { id, isDeleted: false } });
       if (company) {
-        await company.update(updateData);
+        // Validate and truncate ticketShortCode if needed (max 10 characters for database)
+        const updatePayload: any = {
+          ...updateData,
+          updatedBy: userId || null,
+        };
+        
+        if (updatePayload.ticketShortCode && updatePayload.ticketShortCode.length > 10) {
+          updatePayload.ticketShortCode = updatePayload.ticketShortCode.substring(0, 10);
+        }
+        
+        await company.update(updatePayload);
         return company;
       }
       return null;
@@ -150,7 +149,7 @@ class CompanyRepository {
     }
   }
 
-  private async _deleteCompanyById(id: string): Promise<boolean> {
+  private async _deleteCompanyById(id: string, userId?: string | null): Promise<boolean> {
     try {
       const sequelize = Company.sequelize;
 
@@ -165,6 +164,15 @@ class CompanyRepository {
           return false;
         }
 
+        // Soft delete: Update the company with deletedBy and deletedAt
+        await company.update({
+          deletedBy: userId || null,
+          deletedAt: new Date(),
+          isDeleted: true,
+        }, { transaction });
+
+        // Also soft delete related records if they support it
+        // For now, we'll keep hard deletes for related records as they may not have soft delete support
         await MaintenanceService.destroy({ where: { companyId: id }, transaction });
         await Contract.destroy({ where: { companyId: id }, transaction });
         await User.destroy({ where: { companyId: id }, transaction });
@@ -183,8 +191,7 @@ class CompanyRepository {
 
         await Branch.destroy({ where: { companyId: id }, transaction });
 
-        const deleted = await Company.destroy({ where: { id }, transaction });
-        return deleted > 0;
+        return true;
       });
     } catch (error) {
       throw new ApolloError(`Failed to delete company with ID ${id}: ${error.message}`, 'COMPANY_DELETION_FAILED');

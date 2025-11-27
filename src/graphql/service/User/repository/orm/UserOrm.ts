@@ -1,7 +1,5 @@
 import { Model } from 'sequelize-typescript'
-
-import { UserRoles } from '../../typedefs/User/enums/User.enums'
-
+import { Lookup } from '../../../../../db/models/lookup.model'
 
 export declare class UserOrm extends Model {
   deviceId: string
@@ -13,7 +11,8 @@ export declare class UserOrm extends Model {
   mobileNumber: string | null
   userNumber: string
   password: string
-  userRole: UserRoles
+  userRoleId: string
+  userRoleLookup?: Lookup
   fcmToken: string
   companyId: string | null
 }

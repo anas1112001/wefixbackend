@@ -24,20 +24,17 @@ export class Company {
   @Field((_type) => LookupType, { nullable: true })
   public countryLookup: LookupType | null;
 
-  @Field((_type) => LookupType, { nullable: true })
-  public establishedTypeLookup: LookupType | null;
-
   @Field((_type) => String, { nullable: true })
   public hoAddress: string | null;
 
   @Field((_type) => String, { nullable: true })
   public hoLocation: string | null;
 
+  @Field((_type) => String, { nullable: true })
+  public ticketShortCode: string | null;
+
   @Field((_type) => CompanyStatus!)
   public isActive: CompanyStatus;
-
-  @Field((_type) => Number!)
-  public numberOfBranches: number;
 
   @Field((_type) => String, { nullable: true })
   public logo: string | null;

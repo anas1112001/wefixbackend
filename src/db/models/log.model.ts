@@ -77,4 +77,62 @@ export class Log extends Model {
     type: DataTypes.BOOLEAN,
   })
   public is_archived: boolean
+
+  @ForeignKey(() => User)
+  @Column({
+    allowNull: true,
+    comment: 'User who created this record',
+    type: DataTypes.UUID,
+  })
+  public created_by: string | null
+
+  @BelongsTo(() => User, { foreignKey: 'created_by', as: 'creator' })
+  public creator?: User | null
+
+  @ForeignKey(() => User)
+  @Column({
+    allowNull: true,
+    comment: 'User who last updated this record',
+    type: DataTypes.UUID,
+  })
+  public updated_by: string | null
+
+  @BelongsTo(() => User, { foreignKey: 'updated_by', as: 'updater' })
+  public updater?: User | null
+
+  @Column({
+    allowNull: true,
+    comment: 'DateTime when record was deleted',
+    get: getDate('deleted_at'),
+    set: setDate('deleted_at'),
+    type: DataTypes.DATE,
+  })
+  public deleted_at: Date | null
+
+  @ForeignKey(() => User)
+  @Column({
+    allowNull: true,
+    comment: 'User who deleted this record',
+    type: DataTypes.UUID,
+  })
+  public deleted_by: string | null
+
+  @BelongsTo(() => User, { foreignKey: 'deleted_by', as: 'deleter' })
+  public deleter?: User | null
+
+  @Column({
+    allowNull: false,
+    comment: 'Whether the record is active',
+    defaultValue: true,
+    type: DataTypes.BOOLEAN,
+  })
+  public is_active: boolean
+
+  @Column({
+    allowNull: false,
+    comment: 'Whether the record is deleted (soft delete)',
+    defaultValue: false,
+    type: DataTypes.BOOLEAN,
+  })
+  public is_deleted: boolean
 }

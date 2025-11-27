@@ -1,0 +1,852 @@
+{
+	"info": {
+		"_postman_id": "wefix-backend-api-collection",
+		"name": "WeFix Backend API",
+		"description": "Complete API collection for WeFix Backend - GraphQL and REST endpoints",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "GraphQL - Queries",
+			"item": [
+				{
+					"name": "Health Check - Introspection",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response has data\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('data');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"query\": \"{ __schema { queryType { name } } }\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/graphql",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"graphql"
+							]
+						},
+						"description": "Basic GraphQL introspection query to verify server is running"
+					}
+				},
+				{
+					"name": "Get All Lookups",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"query\": \"query { getAllLookups { id name nameArabic category code isActive orderId } }\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/graphql",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"graphql"
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Lookups by Category",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"query\": \"query { getLookupsByCategory(category: COUNTRY) { id name nameArabic category isActive } }\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/graphql",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"graphql"
+							]
+						},
+						"description": "Get lookups by category. Available categories: COUNTRY, ESTABLISHED_TYPE, TEAM_LEADER, USER_ROLE, BUSINESS_MODEL, MANAGED_BY, STATE"
+					}
+				},
+				{
+					"name": "Get All Companies",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"query\": \"query { getCompanies(filter: { limit: 10, page: 1 }) { companies { id title companyId companyNameEnglish companyNameArabic isActive numberOfBranches createdAt } totalCount } }\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/graphql",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"graphql"
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Company by ID",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"query\": \"query { getCompanyById(id: \\\"{{company_id}}\\\") { company { id title companyId companyNameEnglish isActive } } }\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/graphql",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"graphql"
+							]
+						}
+					}
+				},
+				{
+					"name": "Get All Users",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"query\": \"query { getAllUsers { users { id firstName lastName email userNumber userRole deviceId createdAt } totalCount } }\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/graphql",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"graphql"
+							]
+						}
+					}
+				},
+				{
+					"name": "Get All Countries",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"query\": \"query { getCountries { id name code isActive createdAt } }\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/graphql",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"graphql"
+							]
+						}
+					}
+				},
+				{
+					"name": "Get All Established Types",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"query\": \"query { getEstablishedTypes { id name nameArabic isActive createdAt } }\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/graphql",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"graphql"
+							]
+						}
+					}
+				},
+				{
+					"name": "Get All Contracts",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"query\": \"query { getContracts(filter: { limit: 10, page: 1 }) { contracts { id contractReference contractTitle contractStartDate contractEndDate isActive } totalCount } }\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/graphql",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"graphql"
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Contract by ID",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"query\": \"query { getContractById(id: \\\"{{contract_id}}\\\") { contract { id contractReference contractTitle contractStartDate contractEndDate } } }\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/graphql",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"graphql"
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Branches by Company ID",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"query\": \"query { getBranchesByCompanyId(companyId: \\\"{{company_id}}\\\") { id branchTitle branchNameEnglish branchNameArabic isActive } }\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/graphql",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"graphql"
+							]
+						}
+					}
+				},
+				{
+					"name": "Get All Active Main Services",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"query\": \"query { getActiveMainServices { id name nameArabic code isActive } }\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/graphql",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"graphql"
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Active Sub Services by Main Service",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"query\": \"query { getActiveSubServicesByMainServiceId(mainServiceId: \\\"{{main_service_id}}\\\") { id name nameArabic code isActive } }\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/graphql",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"graphql"
+							]
+						}
+					}
+				},
+				{
+					"name": "Get All Individuals",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"query\": \"query { getIndividuals(filter: { limit: 10, page: 1 }) { individuals { id firstName lastName email individualId isActive } totalCount } }\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/graphql",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"graphql"
+							]
+						}
+					}
+				},
+				{
+					"name": "Get All Logs",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"query\": \"query { getAllLogs { log { id actionType time description user { id firstName lastName } } } }\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/graphql",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"graphql"
+							]
+						}
+					}
+				}
+			],
+			"description": "All GraphQL query operations"
+		},
+		{
+			"name": "GraphQL - Mutations",
+			"item": [
+				{
+					"name": "Login User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response has token\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    if (jsonData.data && jsonData.data.login && jsonData.data.login.token) {",
+									"        pm.environment.set(\"access_token\", jsonData.data.login.token.accessToken);",
+									"        pm.environment.set(\"refresh_token\", jsonData.data.login.token.refreshToken);",
+									"        pm.environment.set(\"user_id\", jsonData.data.login.user.id);",
+									"        pm.expect(jsonData.data.login.token).to.have.property('accessToken');",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"query\": \"mutation { login(loginData: { email: \\\"jehadabuawwad@outlook.com\\\", password: \\\"Test123!\\\", deviceId: \\\"UP1A.231105.004\\\", fcmToken: \\\"test-fcm-token-2\\\" }) { token { accessToken refreshToken expiresIn tokenType } user { id firstName lastName email userRole } message } }\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:4000/graphql",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"graphql"
+							]
+						},
+						"description": "Login user and get access token. Token will be automatically saved to environment.\n\nHardcoded credentials (edit directly in body if needed):\n- Email: jehadabuawwad@outlook.com\n- Password: Test123!\n- Device ID: UP1A.231105.004\n- FCM Token: test-fcm-token-2\n- URL: http://localhost:4000/graphql"
+					}
+				},
+				{
+					"name": "Create Company",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"query\": \"mutation { createCompany(companyData: { title: \\\"Test Company\\\", companyId: \\\"COMP001\\\", companyNameEnglish: \\\"Test Company Ltd\\\", companyNameArabic: \\\"شركة تجريبية\\\", isActive: ACTIVE, numberOfBranches: 0 }) { company { id title companyId companyNameEnglish isActive } message } }\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/graphql",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"graphql"
+							]
+						}
+					}
+				},
+				{
+					"name": "Create User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"query\": \"mutation { createUser(userData: { userNumber: \\\"USR001\\\", firstName: \\\"John\\\", lastName: \\\"Doe\\\", email: \\\"john.doe@example.com\\\", password: \\\"password123\\\", userRole: COMPANY, deviceId: \\\"device123\\\", fcmToken: \\\"fcm_token_here\\\" }) { user { id firstName lastName email userRole } token { accessToken } message } }\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/graphql",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"graphql"
+							]
+						}
+					}
+				},
+				{
+					"name": "Create Contract",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"query\": \"mutation { createContract(contractData: { companyId: \\\"{{company_id}}\\\", businessModelLookupId: \\\"{{business_model_lookup_id}}\\\", contractTitle: \\\"Test Contract\\\", contractReference: \\\"CONTRACT001\\\", isActive: true }) { contract { id contractReference contractTitle isActive } message } }\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/graphql",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"graphql"
+							]
+						}
+					}
+				},
+				{
+					"name": "Create Branch",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"query\": \"mutation { createBranch(branchData: { branchTitle: \\\"Main Branch\\\", branchNameEnglish: \\\"Main Branch\\\", companyId: \\\"{{company_id}}\\\", isActive: true }) { id branchTitle branchNameEnglish isActive } }\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/graphql",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"graphql"
+							]
+						}
+					}
+				},
+				{
+					"name": "Create Zone",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"query\": \"mutation { createZone(zoneData: { zoneTitle: \\\"Zone 1\\\", zoneNumber: \\\"Z001\\\", branchId: \\\"{{branch_id}}\\\", isActive: true }) { id zoneTitle zoneNumber isActive } }\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/graphql",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"graphql"
+							]
+						}
+					}
+				},
+				{
+					"name": "Create Individual",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"query\": \"mutation { createIndividual(individualData: { individualId: \\\"IND001\\\", firstName: \\\"Jane\\\", lastName: \\\"Smith\\\", email: \\\"jane.smith@example.com\\\", phoneNumber: \\\"+1234567890\\\", isActive: ACTIVE }) }\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/graphql",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"graphql"
+							]
+						}
+					}
+				},
+				{
+					"name": "Update Company",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"query\": \"mutation { updateCompany(id: \\\"{{company_id}}\\\", updateCompanyData: { title: \\\"Updated Company Name\\\", isActive: ACTIVE }) { company { id title isActive } message } }\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/graphql",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"graphql"
+							]
+						}
+					}
+				},
+				{
+					"name": "Delete Company",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"query\": \"mutation { deleteCompany(id: \\\"{{company_id}}\\\") }\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/graphql",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"graphql"
+							]
+						}
+					}
+				},
+				{
+					"name": "Refresh Access Token",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"query\": \"mutation { refreshAccessToken(token: \\\"{{refresh_token}}\\\") { accessToken refreshToken expiresIn tokenType } }\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/graphql",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"graphql"
+							]
+						}
+					}
+				},
+				{
+					"name": "Forgot Password",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"query\": \"mutation { forgotPassword(forgotPasswordData: { username: \\\"{{user_email}}\\\", lastFourDigits: \\\"1234\\\" }) { success message } }\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/graphql",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"graphql"
+							]
+						}
+					}
+				}
+			],
+			"description": "All GraphQL mutation operations"
+		},
+		{
+			"name": "REST - File Upload",
+			"item": [
+				{
+					"name": "Upload File",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": []
+								},
+								{
+									"key": "filename",
+									"value": "test-file.pdf",
+									"type": "text"
+								},
+								{
+									"key": "chunkIndex",
+									"value": "0",
+									"type": "text"
+								},
+								{
+									"key": "totalChunks",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/upload",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"upload"
+							]
+						},
+						"description": "Upload a file. Supports chunked uploads for large files."
+					}
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// Auto-add Authorization header if access_token exists",
+					"if (pm.environment.get(\"access_token\")) {",
+					"    pm.request.headers.add({",
+					"        key: \"Authorization\",",
+					"        value: \"Bearer \" + pm.environment.get(\"access_token\")",
+					"    });",
+					"}"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// Global test script",
+					"pm.test(\"Response time is less than 5000ms\", function () {",
+					"    pm.expect(pm.response.responseTime).to.be.below(5000);",
+					"});"
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:4000",
+			"type": "string"
+		}
+	]
+}
+

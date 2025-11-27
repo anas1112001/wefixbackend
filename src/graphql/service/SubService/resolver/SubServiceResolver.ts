@@ -1,10 +1,12 @@
 import { ApolloError } from 'apollo-server-express';
-import { Arg, Ctx, Query, Resolver } from 'type-graphql';
+import { Arg, Ctx, FieldResolver, Query, Resolver, Root } from 'type-graphql';
+import { Lookup } from '../../../../db/models/lookup.model';
 import SubServiceRepository from '../repository/SubServiceRepository';
 import { SubService } from '../typedefs/SubService/schema/SubService.schema';
+import { MainService } from '../../MainService/typedefs/MainService/schema/MainService.schema';
 import { SharedContext } from '../../../shared/context/SharedContext';
 
-@Resolver()
+@Resolver(() => SubService)
 export class SubServiceResolver {
   @Query(() => [SubService], { description: 'Get all sub services' })
   public async getAllSubServices(@Ctx() { services }: SharedContext): Promise<SubService[]> {
@@ -63,6 +65,12 @@ export class SubServiceResolver {
     } catch (error) {
       throw new ApolloError(`Error retrieving sub service: ${error.message}`, 'SUB_SERVICE_QUERY_ERROR');
     }
+  }
+
+  @FieldResolver(() => MainService, { description: 'Get the main service for this sub service' })
+  public mainService(@Root() subService: Lookup): MainService {
+    // Map parent (Lookup) to mainService (MainService)
+    return (subService as any).parent as any;
   }
 }
 

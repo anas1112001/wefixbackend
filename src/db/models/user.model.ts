@@ -1,9 +1,9 @@
 import { DataTypes, UUIDV4 } from 'sequelize'
 import { BelongsTo, Column, CreatedAt, ForeignKey, Model, Table, UpdatedAt } from 'sequelize-typescript'
 
-import {  UserRoles } from '../../graphql/service/User/typedefs/User/enums/User.enums'
 import { getDate, getIsoTimestamp, getUserFullName, setDate, toLowerCase } from '../../lib'
 import { Company } from './company.model'
+import { Lookup } from './lookup.model'
 
 @Table({
   modelName: 'User',
@@ -92,12 +92,16 @@ export class User extends Model {
   })
   public mobileNumber: string | null
 
+  @ForeignKey(() => Lookup)
   @Column({
     allowNull: false,
-    comment: 'User Roles',
-    type: DataTypes.ENUM({ values: Object.values(UserRoles) }),
+    comment: 'User Role lookup reference',
+    type: DataTypes.UUID,
   })
-  public userRole: UserRoles | null
+  public userRoleId: string
+
+  @BelongsTo(() => Lookup, { foreignKey: 'userRoleId', as: 'userRoleLookup' })
+  public userRoleLookup: Lookup
 
   @ForeignKey(() => Company)
   @Column({
@@ -131,4 +135,62 @@ export class User extends Model {
     type: DataTypes.DATE,
   })
   public updatedAt: Date
+
+  @ForeignKey(() => User)
+  @Column({
+    allowNull: true,
+    comment: 'User who created this record',
+    type: DataTypes.UUID,
+  })
+  public createdBy: string | null
+
+  @BelongsTo(() => User, { foreignKey: 'createdBy', as: 'creator' })
+  public creator?: User | null
+
+  @ForeignKey(() => User)
+  @Column({
+    allowNull: true,
+    comment: 'User who last updated this record',
+    type: DataTypes.UUID,
+  })
+  public updatedBy: string | null
+
+  @BelongsTo(() => User, { foreignKey: 'updatedBy', as: 'updater' })
+  public updater?: User | null
+
+  @Column({
+    allowNull: true,
+    comment: 'DateTime when record was deleted',
+    get: getDate('deletedAt'),
+    set: setDate('deletedAt'),
+    type: DataTypes.DATE,
+  })
+  public deletedAt: Date | null
+
+  @ForeignKey(() => User)
+  @Column({
+    allowNull: true,
+    comment: 'User who deleted this record',
+    type: DataTypes.UUID,
+  })
+  public deletedBy: string | null
+
+  @BelongsTo(() => User, { foreignKey: 'deletedBy', as: 'deleter' })
+  public deleter?: User | null
+
+  @Column({
+    allowNull: false,
+    comment: 'Whether the record is active',
+    defaultValue: true,
+    type: DataTypes.BOOLEAN,
+  })
+  public isActive: boolean
+
+  @Column({
+    allowNull: false,
+    comment: 'Whether the record is deleted (soft delete)',
+    defaultValue: false,
+    type: DataTypes.BOOLEAN,
+  })
+  public isDeleted: boolean
 }

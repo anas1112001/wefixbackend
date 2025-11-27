@@ -20,15 +20,6 @@ const seedCompanies = async () => {
       return;
     }
 
-    // Get established type lookups
-    const establishedTypes = await Lookup.findAll({
-      where: { category: LookupCategory.ESTABLISHED_TYPE, isActive: true },
-    });
-    if (establishedTypes.length === 0) {
-      console.error('No established types found. Please seed lookups first.');
-      return;
-    }
-
     // Check if companies already exist
     const existingCompanies = await Company.count();
     if (existingCompanies > 0) {
@@ -50,21 +41,18 @@ const seedCompanies = async () => {
             continue;
           }
           
-          // Assign country and established type in round-robin fashion
+          // Assign country in round-robin fashion
           const country = countries[i % countries.length];
-          const establishedType = establishedTypes[i % establishedTypes.length];
 
-          // Use raw query to set both old and new columns
+          // Use raw query to insert company
           await orm.sequelize.query(`
             INSERT INTO companies (
               id, company_id, title, company_name_arabic, company_name_english,
-              country_lookup_id, established_type_lookup_id, established_type,
-              ho_address, ho_location, is_active, number_of_branches, logo,
+              country_lookup_id, ho_address, ho_location, is_active, logo,
               created_at, updated_at
             ) VALUES (
               gen_random_uuid(), :companyId, :title, :companyNameArabic, :companyNameEnglish,
-              :countryLookupId, :establishedTypeLookupId, 'LLC',
-              :hoAddress, :hoLocation, :isActive, :numberOfBranches, :logo,
+              :countryLookupId, :hoAddress, :hoLocation, :isActive, :logo,
               NOW(), NOW()
             )
           `, {
@@ -74,11 +62,9 @@ const seedCompanies = async () => {
               companyNameArabic: companyData.companyNameArabic,
               companyNameEnglish: companyData.companyNameEnglish,
               countryLookupId: country.id,
-              establishedTypeLookupId: establishedType.id,
               hoAddress: companyData.hoAddress,
               hoLocation: companyData.hoLocation,
               isActive: companyData.isActive ? 'Active' : 'Inactive',
-              numberOfBranches: companyData.numberOfBranches,
               logo: companyData.logo,
             },
             type: QueryTypes.INSERT,

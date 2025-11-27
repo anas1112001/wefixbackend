@@ -1,6 +1,6 @@
 import { ApolloError } from 'apollo-server-express'
 import jwt from 'jsonwebtoken';
-import { Resolver, Query, Arg, Ctx, Mutation } from 'type-graphql'
+import { Resolver, Query, Arg, Ctx, Mutation, FieldResolver, Root } from 'type-graphql'
 
 import { generateRefreshToken, generateToken } from '../../../../lib';
 import { SharedContext } from '../../../shared/context'
@@ -15,7 +15,11 @@ import { QueryUserResponse } from '../typedefs/User/responses/QueryUserResponse.
 import { QueryUsersResponse } from '../typedefs/User/responses/QueryUsersResponse.schema';
 import { UpdateUserResponse } from '../typedefs/User/responses/UpdateUserResponse.schema';
 import { AuthTokens } from '../typedefs/User/schema/AuthTokens.schema';
+import { User } from '../typedefs/User/schema/User.schema';
+import { LookupType } from '../../Lookup/typedefs/Lookup/schema/Lookup.schema';
+
 @Resolver((_of) => QueryUsersResponse)
+@Resolver(() => User)
 
 export class UserResolver {
   @Mutation(() => LoginResponse, { description: 'Login a User' })
@@ -203,6 +207,11 @@ export class UserResolver {
     } catch (error) {
       throw new ApolloError(`Error processing forgot password request: ${error.message}`, 'FORGOT_PASSWORD_ERROR');
     }
+  }
+
+  @FieldResolver(() => LookupType, { nullable: true })
+  public userRole(@Root() user: any): LookupType | null {
+    return (user as any).userRoleLookup || null;
   }
 
 }

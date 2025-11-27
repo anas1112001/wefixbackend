@@ -1,19 +1,24 @@
-import { Country } from '../../../../db/models/country.model';
-import { CountryOrm } from './orm/CountryOrm';
+import { Lookup, LookupCategory } from '../../../../db/models/lookup.model';
 
 export default class CountryRepository {
-  private countryOrm: CountryOrm;
-
-  constructor() {
-    this.countryOrm = new CountryOrm();
+  public async getCountries(): Promise<Lookup[]> {
+    return Lookup.findAll({
+      where: {
+        category: LookupCategory.COUNTRY,
+        isActive: true,
+      },
+      order: [['orderId', 'ASC'], ['name', 'ASC']],
+    });
   }
 
-  public async getCountries(): Promise<Country[]> {
-    return this.countryOrm.findAll({ where: { isActive: true }, order: [['name', 'ASC']] });
-  }
-
-  public async getCountryById(id: string): Promise<Country | null> {
-    return this.countryOrm.findByPk(id);
+  public async getCountryById(id: string): Promise<Lookup | null> {
+    return Lookup.findOne({
+      where: {
+        id,
+        category: LookupCategory.COUNTRY,
+        isActive: true,
+      },
+    });
   }
 }
 

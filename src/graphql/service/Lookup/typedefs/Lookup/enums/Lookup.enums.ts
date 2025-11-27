@@ -5,9 +5,10 @@ export enum LookupCategory {
   BUSINESS_MODEL = 'BusinessModel',
   COUNTRY = 'Country',
   ESTABLISHED_TYPE = 'EstablishedType',
+  MAIN_SERVICE = 'MainService',
   MANAGED_BY = 'ManagedBy',
   STATE = 'State',
-  TEAM_LEADER = 'TeamLeader',
+  SUB_SERVICE = 'SubService',
   USER_ROLE = 'UserRole',
 }
 

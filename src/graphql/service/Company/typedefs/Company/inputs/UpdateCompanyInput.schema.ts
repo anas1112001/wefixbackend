@@ -16,19 +16,16 @@ export class UpdateCompanyInput {
   countryLookupId?: string | null;
 
   @Field((_type) => String, { nullable: true })
-  establishedTypeLookupId?: string | null;
-
-  @Field((_type) => String, { nullable: true })
   hoAddress?: string | null;
 
   @Field((_type) => String, { nullable: true })
   hoLocation?: string | null;
 
+  @Field((_type) => String, { nullable: true })
+  ticketShortCode?: string | null;
+
   @Field((_type) => CompanyStatus, { nullable: true })
   isActive?: CompanyStatus;
-
-  @Field((_type) => Number, { nullable: true })
-  numberOfBranches?: number;
 
   @Field((_type) => String, { nullable: true })
   logo?: string | null;

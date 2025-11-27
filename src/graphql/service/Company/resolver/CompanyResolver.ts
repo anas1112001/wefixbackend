@@ -51,10 +51,13 @@ export class CompanyResolver {
   @Mutation(() => CreateCompanyResponse, { description: 'Create a Company' })
   public async createCompany(
     @Arg('companyData') companyData: CreateCompanyInput,
-    @Ctx() { services }: SharedContext
+    @Ctx() { services, userId }: SharedContext
   ): Promise<CreateCompanyResponse> {
     try {
-      const company = await services.companyRepository.createCompany(companyData);
+      if (process.env.NODE_ENV === 'development') {
+        console.log('Creating company with userId:', userId);
+      }
+      const company = await services.companyRepository.createCompany(companyData, userId);
       return { company: company as any, message: 'Company created successfully' };
     } catch (error) {
       throw new ApolloError(`Error creating company: ${error.message}`, 'COMPANY_CREATION_ERROR');
@@ -65,10 +68,10 @@ export class CompanyResolver {
   public async updateCompany(
     @Arg('id') id: string,
     @Arg('updateCompanyData') updateCompanyData: UpdateCompanyInput,
-    @Ctx() { services }: SharedContext
+    @Ctx() { services, userId }: SharedContext
   ): Promise<UpdateCompanyResponse> {
     try {
-      const company = await services.companyRepository.updateCompanyById(id, updateCompanyData);
+      const company = await services.companyRepository.updateCompanyById(id, updateCompanyData, userId);
       if (!company) {
         return { company: null, message: 'Company not found' };
       }
@@ -81,10 +84,10 @@ export class CompanyResolver {
   @Mutation(() => Boolean, { description: 'Delete a Company' })
   public async deleteCompany(
     @Arg('id') id: string,
-    @Ctx() { services }: SharedContext
+    @Ctx() { services, userId }: SharedContext
   ): Promise<boolean> {
     try {
-      const deleted = await services.companyRepository.deleteCompanyById(id);
+      const deleted = await services.companyRepository.deleteCompanyById(id, userId);
       if (!deleted) {
         throw new ApolloError('Company not found', 'COMPANY_NOT_FOUND');
       }

@@ -1,7 +1,6 @@
 import { Model } from 'sequelize-typescript';
 import { Company } from '../../../../../db/models/company.model';
-import { MainService } from '../../../../../db/models/main-service.model';
-import { SubService } from '../../../../../db/models/sub-service.model';
+import { Lookup } from '../../../../../db/models/lookup.model';
 
 export declare class MaintenanceServiceOrm extends Model {
   id: string;
@@ -12,7 +11,7 @@ export declare class MaintenanceServiceOrm extends Model {
   createdAt: Date;
   updatedAt: Date;
   company?: Company;
-  mainService?: MainService;
-  subService?: SubService;
+  mainService?: Lookup;
+  subService?: Lookup;
 }
 
